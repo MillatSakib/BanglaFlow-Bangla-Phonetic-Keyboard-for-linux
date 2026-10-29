@@ -6,6 +6,7 @@ Offline only: no network connections, strict local file permissions (0600).
 
 import bisect
 import os
+import pickle
 from pathlib import Path
 from typing import Dict, List, Optional, Set, Tuple
 
@@ -17,6 +18,15 @@ class BengaliDictionary:
 
     MAX_WORD_LENGTH: int = 64
     MAX_DICT_ENTRIES: int = 250_000
+
+    _shared_instance: Optional["BengaliDictionary"] = None
+
+    @classmethod
+    def get_shared_instance(cls) -> "BengaliDictionary":
+        """Get or initialize singleton shared dictionary instance."""
+        if cls._shared_instance is None:
+            cls._shared_instance = cls()
+        return cls._shared_instance
 
     def __init__(self, bundled_path: Optional[Path] = None, user_path: Optional[Path] = None):
         self._entries: Dict[str, int] = {}
@@ -37,8 +47,37 @@ class BengaliDictionary:
                     bundled_path = c
                     break
 
+        loaded_from_cache = False
         if bundled_path and bundled_path.exists():
-            self.load_tsv(bundled_path, is_user=False)
+            bin_path = bundled_path.with_name(bundled_path.name + ".bin")
+            if bin_path.exists():
+                try:
+                    if bin_path.stat().st_mtime >= bundled_path.stat().st_mtime:
+                        with open(bin_path, "rb") as f:
+                            cached = pickle.load(f)
+                        self._entries = cached["entries"]
+                        self._exact_norm_map = cached["exact_norm_map"]
+                        self._prefix_norm_keys = cached["prefix_norm_keys"]
+                        self._prefix_words = cached["prefix_words"]
+                        loaded_from_cache = True
+                except Exception:
+                    loaded_from_cache = False
+
+            if not loaded_from_cache:
+                self.load_tsv(bundled_path, is_user=False)
+                self._rebuild_search_index()
+                try:
+                    # Write cache for instant next startups
+                    cache_data = {
+                        "entries": self._entries,
+                        "exact_norm_map": self._exact_norm_map,
+                        "prefix_norm_keys": self._prefix_norm_keys,
+                        "prefix_words": self._prefix_words,
+                    }
+                    with open(bin_path, "wb") as f:
+                        pickle.dump(cache_data, f, protocol=pickle.HIGHEST_PROTOCOL)
+                except Exception:
+                    pass
 
         # User dictionary path
         if user_path is None:
@@ -52,8 +91,9 @@ class BengaliDictionary:
         self.user_path = user_path
         if self.user_path.exists():
             self.load_tsv(self.user_path, is_user=True)
-
-        self._rebuild_search_index()
+            self._rebuild_search_index()
+        elif not loaded_from_cache:
+            self._rebuild_search_index()
 
     @staticmethod
     def normalize_bn(text: str) -> str:

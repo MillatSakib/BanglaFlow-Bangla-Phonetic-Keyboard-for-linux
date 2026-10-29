@@ -1,3 +1,10 @@
+banglaflow (0.1.0-5) resolute; urgency=medium
+
+  * Fix Bengali Dari (.) wiping out composing word on commit by making commit atomic.
+  * Fix 1-2 second delay on input method switch by pre-warming dictionary singleton and using binary cache.
+
+ -- Sakib <sakib@example.com>  Thu, 29 Oct 2026 20:05:00 +0600
+
 banglaflow (0.1.0-4) resolute; urgency=medium
 
   * Strictly place primary phonetic conversion at candidate position 0 (edit panel).

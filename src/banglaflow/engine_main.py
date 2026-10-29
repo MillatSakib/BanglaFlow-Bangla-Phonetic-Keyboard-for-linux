@@ -19,6 +19,7 @@ except Exception as exc:
     sys.exit(1)
 
 from banglaflow import __version__
+from banglaflow.dictionary import BengaliDictionary
 from banglaflow.engine import BanglaFlowEngine
 
 # Configure logging: default WARNING to XDG_STATE_HOME or journal
@@ -44,6 +45,9 @@ def main():
     parser.add_argument("--ibus", action="store_true", help="Executed by IBus daemon")
     parser.add_argument("--version", action="version", version=f"BanglaFlow {__version__}")
     args = parser.parse_args()
+
+    # Pre-warm dictionary singleton cache immediately on daemon start
+    BengaliDictionary.get_shared_instance()
 
     IBus.init()
     bus = IBus.Bus()

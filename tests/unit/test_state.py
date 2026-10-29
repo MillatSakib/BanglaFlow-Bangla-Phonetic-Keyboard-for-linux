@@ -166,8 +166,8 @@ def test_rule_9_punctuation_commits_word_and_mapped_dari():
     handled, actions = sm.process_key_event(ord("."), 0, 0, is_release=False)
     assert handled
     commits = [a.text for a in actions if isinstance(a, Commit)]
-    # Must commit "আমি" then "।"
-    assert commits == ["আমি", "।"]
+    # Must commit "আমি।" as a single atomic commit so word is never erased
+    assert commits == ["আমি\u0964"]
     assert not sm.composing
 
 
@@ -201,12 +201,12 @@ def test_rule_10_and_11_candidate_navigation_and_selection():
     assert handled
     assert sm.selected_index == 0
 
-    # Number key '1' selects first candidate
+    # Number key '1' selects first candidate (primary phonetic transliteration)
     handled, actions = sm.process_key_event(ord("1"), 0, 0, is_release=False)
     assert handled
     assert not sm.composing
     commits = [a.text for a in actions if isinstance(a, Commit)]
-    assert commits == ["ভাষা"]
+    assert commits == ["ভাশা"]
 
 
 def test_rule_12_focus_out_commits_pending():

@@ -255,6 +255,34 @@ class InputStateMachine:
         # 9. Punctuation handling
         punctuation_marks = {",", ".", "?", "!", ";", ":", "'", '"', "(", ")", "[", "]", "{", "}"}
         if char in punctuation_marks or char == "$":
+            # Bengali Dari । mapped from .
+            if char == "." and self.config.map_dari:
+                if self.composing:
+                    cand = self._get_selected_candidate()
+                    # Commit word + dari as ONE atomic commit so word is never erased
+                    actions.append(Commit(cand + "\u0964"))
+                    actions.append(HidePreedit())
+                    actions.append(HideLookup())
+                    self.clear()
+                    return True, actions
+                else:
+                    actions.append(Commit("\u0964"))
+                    return True, actions
+
+            # Bengali Taka ৳ mapped from $
+            if char == "$":
+                if self.composing:
+                    cand = self._get_selected_candidate()
+                    actions.append(Commit(cand + "\u09F3"))
+                    actions.append(HidePreedit())
+                    actions.append(HideLookup())
+                    self.clear()
+                    return True, actions
+                else:
+                    actions.append(Commit("\u09F3"))
+                    return True, actions
+
+            # Other punctuation (commit current composing word first)
             if self.composing:
                 cand = self._get_selected_candidate()
                 actions.append(Commit(cand))
@@ -262,16 +290,8 @@ class InputStateMachine:
                 actions.append(HideLookup())
                 self.clear()
 
-            # Mapped punctuation
-            if char == "." and self.config.map_dari:
-                actions.append(Commit("\u0964"))  # Bengali Dari ।
-                return True, actions
-            elif char == "$":
-                actions.append(Commit("\u09F3"))  # Bengali Taka ৳
-                return True, actions
-            else:
-                # Return not-handled so app inserts punctuation cleanly without duplicate
-                return False, actions
+            # Return not-handled so app inserts punctuation cleanly without duplicate
+            return False, actions
 
         # 3. Regular letters and digits (composition)
         if char.isalnum() or char in ("`", "^"):

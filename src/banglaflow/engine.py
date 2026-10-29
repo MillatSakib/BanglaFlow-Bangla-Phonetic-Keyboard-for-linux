@@ -51,7 +51,7 @@ class BanglaFlowEngine(BaseEngine):
         self.phonetic_engine = PhoneticEngine(
             map_dari=self.config.map_dari, bengali_digits=self.config.bengali_digits
         )
-        self.dictionary = BengaliDictionary()
+        self.dictionary = BengaliDictionary.get_shared_instance()
         self.candidate_gen = CandidateGenerator(self.phonetic_engine, self.dictionary)
         self.state_machine = InputStateMachine(
             self.phonetic_engine, self.candidate_gen, self.config
