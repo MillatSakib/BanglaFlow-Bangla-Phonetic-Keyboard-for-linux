@@ -56,7 +56,13 @@ BanglaFlow is a native, lightweight, and system-wide Bengali phonetic input meth
 
 ---
 
-## Quick Reference / Typing Rules
+## Phonetic Typing Reference Guide
+
+Complete reference map for all Bengali vowels (স্বরবর্ণ), consonants (ব্যঞ্জনবর্ণ), vowel signs/kar (কার), conjuncts (যুক্তাক্ষর), digits (সংখ্যা), and punctuation:
+
+![BanglaFlow Character & Keyboard Mapping Guide](docs/images/banglaflow-keyboard-layout.png)
+
+### Quick Reference & Examples
 
 | English Input | Bengali Output | Notes |
 | :--- | :--- | :--- |
