@@ -28,6 +28,7 @@ class BengaliDictionary:
         # Default bundled dictionary location
         if bundled_path is None:
             candidates = [
+                Path.home() / ".local" / "share" / "banglaflow" / "dictionaries" / "words.tsv",
                 Path(__file__).resolve().parent.parent.parent / "data" / "dictionaries" / "words.tsv",
                 Path("/usr/share/banglaflow/dictionaries/words.tsv"),
             ]
