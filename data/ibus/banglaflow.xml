@@ -17,7 +17,7 @@
 			<license>GPL-3.0-or-later</license>
 			<author>Sakib</author>
 			<icon>/usr/share/banglaflow/icons/banglaflow.png</icon>
-			<layout>default</layout>
+			<layout>us</layout>
 			<longname>BanglaFlow</longname>
 			<description>BanglaFlow Bengali Phonetic Input Method</description>
 			<rank>0</rank>

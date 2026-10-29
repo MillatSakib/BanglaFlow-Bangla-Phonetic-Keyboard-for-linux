@@ -1,11 +1,11 @@
 === dpkg-deb -I ===
  new Debian package, version 2.0.
- size 31758 bytes: control archive=1338 bytes.
+ size 31862 bytes: control archive=1337 bytes.
      656 bytes,    16 lines      control
     1561 bytes,    19 lines      md5sums
      284 bytes,    14 lines   *  postrm               #!/bin/sh
  Package: banglaflow
- Version: 0.1.0-1
+ Version: 0.1.0-2
  Architecture: all
  Maintainer: Sakib <sakib@example.com>
  Installed-Size: 194
@@ -22,41 +22,39 @@
   and zero telemetry or typing history leaks.
 
 === dpkg-deb -c ===
-drwxr-xr-x root/root         0 2026-10-29 17:58 ./
-drwxr-xr-x root/root         0 2026-10-29 17:58 ./usr/
-drwxr-xr-x root/root         0 2026-10-29 17:58 ./usr/lib/
-drwxr-xr-x root/root         0 2026-10-29 17:58 ./usr/lib/python3/
-drwxr-xr-x root/root         0 2026-10-29 17:58 ./usr/lib/python3/dist-packages/
-drwxr-xr-x root/root         0 2026-10-29 17:58 ./usr/lib/python3/dist-packages/banglaflow/
--rw-r--r-- root/root       152 2026-10-29 17:58 ./usr/lib/python3/dist-packages/banglaflow/__init__.py
--rw-r--r-- root/root       122 2026-10-29 17:58 ./usr/lib/python3/dist-packages/banglaflow/__main__.py
--rw-r--r-- root/root      3523 2026-10-29 17:58 ./usr/lib/python3/dist-packages/banglaflow/candidates.py
--rw-r--r-- root/root      3147 2026-10-29 17:58 ./usr/lib/python3/dist-packages/banglaflow/config.py
--rw-r--r-- root/root      4460 2026-10-29 17:58 ./usr/lib/python3/dist-packages/banglaflow/dictionary.py
--rw-r--r-- root/root      6501 2026-10-29 17:58 ./usr/lib/python3/dist-packages/banglaflow/engine.py
--rw-r--r-- root/root      2338 2026-10-29 17:58 ./usr/lib/python3/dist-packages/banglaflow/engine_main.py
--rw-r--r-- root/root      5857 2026-10-29 17:58 ./usr/lib/python3/dist-packages/banglaflow/phonetic.py
--rw-r--r-- root/root      6088 2026-10-29 17:58 ./usr/lib/python3/dist-packages/banglaflow/rules.py
--rw-r--r-- root/root     12725 2026-10-29 17:58 ./usr/lib/python3/dist-packages/banglaflow/state.py
--rw-r--r-- root/root      9487 2026-10-29 17:58 ./usr/lib/python3/dist-packages/banglaflow/unicode_utils.py
-drwxr-xr-x root/root         0 2026-10-29 17:58 ./usr/libexec/
--rwxr-xr-x root/root       102 2026-10-29 17:58 ./usr/libexec/ibus-engine-banglaflow
-drwxr-xr-x root/root         0 2026-10-29 17:58 ./usr/share/
-drwxr-xr-x root/root         0 2026-10-29 17:58 ./usr/share/banglaflow/
-drwxr-xr-x root/root         0 2026-10-29 17:58 ./usr/share/banglaflow/dictionaries/
--rw-r--r-- root/root     80493 2026-10-29 17:58 ./usr/share/banglaflow/dictionaries/words.tsv
-drwxr-xr-x root/root         0 2026-10-29 17:58 ./usr/share/banglaflow/icons/
--rw-r--r-- root/root       388 2026-10-29 17:58 ./usr/share/banglaflow/icons/banglaflow.png
--rw-r--r-- root/root       335 2026-10-29 17:58 ./usr/share/banglaflow/icons/banglaflow.svg
-drwxr-xr-x root/root         0 2026-10-29 17:58 ./usr/share/banglaflow/rules/
--rw-r--r-- root/root     30666 2026-10-29 17:58 ./usr/share/banglaflow/rules/phonetic_rules.json
-drwxr-xr-x root/root         0 2026-10-29 17:58 ./usr/share/doc/
-drwxr-xr-x root/root         0 2026-10-29 17:58 ./usr/share/doc/banglaflow/
--rw-r--r-- root/root       186 2026-10-29 17:58 ./usr/share/doc/banglaflow/changelog.Debian.gz
--rw-r--r-- root/root      1403 2026-10-29 17:58 ./usr/share/doc/banglaflow/copyright
-drwxr-xr-x root/root         0 2026-10-29 17:58 ./usr/share/ibus/
-drwxr-xr-x root/root         0 2026-10-29 17:58 ./usr/share/ibus/component/
--rw-r--r-- root/root       857 2026-10-29 17:58 ./usr/share/ibus/component/banglaflow.xml
-
-=== SHA256 Checksum ===
-cfb140dbf3194126c63e73f010f1bdaac161341286330ff778f5de969aee4301  banglaflow_0.1.0-1_all.deb
+drwxr-xr-x root/root         0 2026-10-29 18:37 ./
+drwxr-xr-x root/root         0 2026-10-29 18:37 ./usr/
+drwxr-xr-x root/root         0 2026-10-29 18:37 ./usr/lib/
+drwxr-xr-x root/root         0 2026-10-29 18:37 ./usr/lib/python3/
+drwxr-xr-x root/root         0 2026-10-29 18:37 ./usr/lib/python3/dist-packages/
+drwxr-xr-x root/root         0 2026-10-29 18:37 ./usr/lib/python3/dist-packages/banglaflow/
+-rw-r--r-- root/root       152 2026-10-29 18:37 ./usr/lib/python3/dist-packages/banglaflow/__init__.py
+-rw-r--r-- root/root       122 2026-10-29 18:37 ./usr/lib/python3/dist-packages/banglaflow/__main__.py
+-rw-r--r-- root/root      3523 2026-10-29 18:37 ./usr/lib/python3/dist-packages/banglaflow/candidates.py
+-rw-r--r-- root/root      3147 2026-10-29 18:37 ./usr/lib/python3/dist-packages/banglaflow/config.py
+-rw-r--r-- root/root      4460 2026-10-29 18:37 ./usr/lib/python3/dist-packages/banglaflow/dictionary.py
+-rw-r--r-- root/root      6555 2026-10-29 18:37 ./usr/lib/python3/dist-packages/banglaflow/engine.py
+-rw-r--r-- root/root      2172 2026-10-29 18:37 ./usr/lib/python3/dist-packages/banglaflow/engine_main.py
+-rw-r--r-- root/root      5857 2026-10-29 18:37 ./usr/lib/python3/dist-packages/banglaflow/phonetic.py
+-rw-r--r-- root/root      6088 2026-10-29 18:37 ./usr/lib/python3/dist-packages/banglaflow/rules.py
+-rw-r--r-- root/root     12725 2026-10-29 18:37 ./usr/lib/python3/dist-packages/banglaflow/state.py
+-rw-r--r-- root/root      9487 2026-10-29 18:37 ./usr/lib/python3/dist-packages/banglaflow/unicode_utils.py
+drwxr-xr-x root/root         0 2026-10-29 18:37 ./usr/libexec/
+-rwxr-xr-x root/root       102 2026-10-29 18:37 ./usr/libexec/ibus-engine-banglaflow
+drwxr-xr-x root/root         0 2026-10-29 18:37 ./usr/share/
+drwxr-xr-x root/root         0 2026-10-29 18:37 ./usr/share/banglaflow/
+drwxr-xr-x root/root         0 2026-10-29 18:37 ./usr/share/banglaflow/dictionaries/
+-rw-r--r-- root/root     80493 2026-10-29 18:37 ./usr/share/banglaflow/dictionaries/words.tsv
+drwxr-xr-x root/root         0 2026-10-29 18:37 ./usr/share/banglaflow/icons/
+-rw-r--r-- root/root       388 2026-10-29 18:37 ./usr/share/banglaflow/icons/banglaflow.png
+-rw-r--r-- root/root       335 2026-10-29 18:37 ./usr/share/banglaflow/icons/banglaflow.svg
+drwxr-xr-x root/root         0 2026-10-29 18:37 ./usr/share/banglaflow/rules/
+-rw-r--r-- root/root     30666 2026-10-29 18:37 ./usr/share/banglaflow/rules/phonetic_rules.json
+drwxr-xr-x root/root         0 2026-10-29 18:37 ./usr/share/doc/
+drwxr-xr-x root/root         0 2026-10-29 18:37 ./usr/share/doc/banglaflow/
+-rw-r--r-- root/root       321 2026-10-29 18:37 ./usr/share/doc/banglaflow/changelog.Debian.gz
+-rw-r--r-- root/root      1403 2026-10-29 18:09 ./usr/share/doc/banglaflow/copyright
+drwxr-xr-x root/root         0 2026-10-29 18:37 ./usr/share/ibus/
+drwxr-xr-x root/root         0 2026-10-29 18:37 ./usr/share/ibus/component/
+-rw-r--r-- root/root       852 2026-10-29 18:37 ./usr/share/ibus/component/banglaflow.xml
+0249f7dba5fccf8a03038cba473a1e6098e5444da6b20e67ad9557b65ce0dca6  banglaflow_0.1.0-2_all.deb

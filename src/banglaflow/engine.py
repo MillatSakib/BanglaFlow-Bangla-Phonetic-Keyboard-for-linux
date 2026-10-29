@@ -117,8 +117,9 @@ class BanglaFlowEngine(BaseEngine):
         """Handle incoming key event from IBus daemon."""
         logger.debug("Event: keycode=%d, modifiers_mask=0x%x", keycode, state)
         try:
+            is_release = bool(state & (1 << 30))
             handled, actions = self.state_machine.process_key_event(
-                keyval, keycode, state, is_release=False
+                keyval, keycode, state, is_release=is_release
             )
             self.execute_actions(actions)
             return handled

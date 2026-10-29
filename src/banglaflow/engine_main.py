@@ -61,17 +61,11 @@ def main():
 
     bus.connect("disconnected", on_disconnected)
 
-    # Register Factory and Engine
-    engine_type = GObject.type_from_name("BanglaFlowEngine")
-    if not engine_type:
-        # Register type explicitly if needed
-        engine_type = BanglaFlowEngine.__gtype__
-
+    # Register Factory and Engine using the exact GType
     factory = IBus.Factory.new(bus.get_connection())
-    factory.add_engine("banglaflow", engine_type)
+    factory.add_engine("banglaflow", BanglaFlowEngine.__gtype__)
 
-    if args.ibus:
-        bus.request_name("org.freedesktop.IBus.BanglaFlow", 0)
+    bus.request_name("org.freedesktop.IBus.BanglaFlow", 0)
 
     try:
         loop.run()
@@ -83,4 +77,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
