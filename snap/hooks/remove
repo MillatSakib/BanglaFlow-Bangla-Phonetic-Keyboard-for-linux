@@ -10,3 +10,4 @@ fi
 
 # Restart IBus daemon
 ibus restart >/dev/null 2>&1 || true
+

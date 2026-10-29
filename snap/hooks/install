@@ -18,3 +18,4 @@ fi
 
 # Restart IBus daemon to pick up the new engine if user session is active
 ibus restart >/dev/null 2>&1 || true
+

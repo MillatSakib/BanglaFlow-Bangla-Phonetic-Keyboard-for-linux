@@ -30,6 +30,7 @@ MANIFEST
 *.tar.gz
 *.tar.xz
 *.dsc
+*.snap
 debian/.debhelper/
 debian/banglaflow/
 debian/banglaflow.substvars

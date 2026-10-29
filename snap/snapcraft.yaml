@@ -38,3 +38,4 @@ parts:
 
       mkdir -p $CRAFT_PART_INSTALL/usr/share/banglaflow/icons
       install -m 644 data/icons/* $CRAFT_PART_INSTALL/usr/share/banglaflow/icons/
+
