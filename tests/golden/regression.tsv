@@ -1,0 +1,22 @@
+# BanglaFlow Regression Corpus
+# Format: input<TAB>expected_output
+ami	আমি
+bangla	বাংলা
+banglay	বাংলায়
+likhi	লিখি
+bhaSha	ভাষা
+amar	আমার
+torrko	তর্ক
+korrmo	কর্ম
+somporrko	সম্পর্ক
+brriShTi	বৃষ্টি
+Taka $100.	টাকা ৳১০০।
+kkhoma	ক্ষমা
+ggan	জ্ঞান
+shanto	শান্ত
+sundor	সুন্দর
+chatro	ছাত্র
+druto	দ্রুত
+prothom	প্রথম
+broto	ব্রত
+gram	গ্রাম

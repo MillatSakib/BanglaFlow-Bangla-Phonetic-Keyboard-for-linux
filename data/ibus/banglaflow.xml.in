@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- filename: banglaflow.xml.in -->
+<component>
+	<name>org.freedesktop.IBus.BanglaFlow</name>
+	<description>BanglaFlow Bengali Phonetic Input Method</description>
+	<exec>@LIBEXECDIR@/ibus-engine-banglaflow --ibus</exec>
+	<version>0.1.0</version>
+	<author>Sakib</author>
+	<license>GPL-3.0-or-later</license>
+	<homepage>https://github.com/sakib/banglaflow</homepage>
+	<textdomain>banglaflow</textdomain>
+
+	<engines>
+		<engine>
+			<name>banglaflow</name>
+			<language>bn</language>
+			<license>GPL-3.0-or-later</license>
+			<author>Sakib</author>
+			<icon>/usr/share/banglaflow/icons/banglaflow.png</icon>
+			<layout>default</layout>
+			<longname>BanglaFlow</longname>
+			<description>BanglaFlow Bengali Phonetic Input Method</description>
+			<rank>0</rank>
+			<symbol>বা</symbol>
+		</engine>
+	</engines>
+</component>
+

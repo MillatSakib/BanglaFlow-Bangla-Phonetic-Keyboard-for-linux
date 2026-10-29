@@ -1,0 +1,36 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: banglaflow
+Upstream-Contact: Sakib <sakib@example.com>
+Source: https://github.com/sakib/banglaflow
+
+Files: *
+Copyright: 2026 Sakib <sakib@example.com>
+License: GPL-3.0-or-later
+
+Files: data/rules/phonetic_rules.json
+Copyright: 2026 Sakib <sakib@example.com>
+           2005-2012 OmicronLab <http://www.omicronlab.com>
+License: MPL-2.0 or GPL-3.0-or-later
+
+Files: data/dictionaries/words.tsv
+Copyright: 2026 Sakib <sakib@example.com>
+           The LibreOffice Project
+License: MPL-2.0 or LGPL-3.0-or-later or GPL-3.0-or-later
+
+License: GPL-3.0-or-later
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+ .
+ On Debian systems, the full text of the GNU General Public License
+ version 3 can be found in `/usr/share/common-licenses/GPL-3'.
+
+License: MPL-2.0
+ This Source Code Form is subject to the terms of the Mozilla Public
+ License, v. 2.0. If a copy of the MPL was not distributed with this
+ file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
+License: LGPL-3.0-or-later
+ On Debian systems, the full text of the GNU Lesser General Public License
+ version 3 can be found in `/usr/share/common-licenses/LGPL-3'.

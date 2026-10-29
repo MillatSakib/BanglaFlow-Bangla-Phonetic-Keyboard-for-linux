@@ -1,0 +1,6 @@
+banglaflow (0.1.0-1) resolute; urgency=medium
+
+  * Initial release of BanglaFlow Bengali Phonetic Input Method.
+    (Closes: #1000000)
+
+ -- Sakib <sakib@example.com>  Thu, 29 Oct 2026 17:58:27 +0600

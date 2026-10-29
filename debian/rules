@@ -1,0 +1,29 @@
+#!/usr/bin/make -f
+
+export DH_VERBOSE = 1
+
+%:
+	dh $@
+
+override_dh_auto_build:
+	# Nothing to compile (pure Python)
+
+override_dh_auto_install:
+	install -d debian/banglaflow/usr/lib/python3/dist-packages/banglaflow
+	cp -r src/banglaflow/* debian/banglaflow/usr/lib/python3/dist-packages/banglaflow/
+
+	install -d debian/banglaflow/usr/libexec
+	install -m 755 src/ibus-engine-banglaflow debian/banglaflow/usr/libexec/ibus-engine-banglaflow
+
+	install -d debian/banglaflow/usr/share/ibus/component
+	install -m 644 data/ibus/banglaflow.xml debian/banglaflow/usr/share/ibus/component/banglaflow.xml
+
+	install -d debian/banglaflow/usr/share/banglaflow/rules
+	install -m 644 data/rules/* debian/banglaflow/usr/share/banglaflow/rules/
+
+	install -d debian/banglaflow/usr/share/banglaflow/dictionaries
+	install -m 644 data/dictionaries/* debian/banglaflow/usr/share/banglaflow/dictionaries/
+
+	install -d debian/banglaflow/usr/share/banglaflow/icons
+	install -m 644 data/icons/* debian/banglaflow/usr/share/banglaflow/icons/
+

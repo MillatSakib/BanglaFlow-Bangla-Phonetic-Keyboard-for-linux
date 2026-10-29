@@ -1,0 +1,8 @@
+#!/bin/sh
+set -e
+echo "Running BanglaFlow autopkgtest smoke test..."
+python3 -c "import banglaflow; from banglaflow.engine import BanglaFlowEngine; print('BanglaFlow module load OK!')"
+test -f /usr/share/ibus/component/banglaflow.xml
+test -x /usr/libexec/ibus-engine-banglaflow
+echo "Autopkgtest smoke passed successfully."
+

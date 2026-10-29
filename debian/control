@@ -1,0 +1,26 @@
+Source: banglaflow
+Section: utils
+Priority: optional
+Maintainer: Sakib <sakib@example.com>
+Build-Depends: debhelper-compat (= 13)
+Standards-Version: 4.7.0
+Rules-Requires-Root: no
+Homepage: https://github.com/sakib/banglaflow
+
+Package: banglaflow
+Architecture: all
+Depends:
+ ibus,
+ python3,
+ python3-gi,
+ gir1.2-ibus-1.0,
+ gir1.2-glib-2.0,
+ ${misc:Depends}
+Recommends: fonts-noto-core
+Description: Native Bengali phonetic input method for Linux (IBus)
+ BanglaFlow is a native, system-wide Bengali phonetic input method
+ designed for Linux desktop environments with GNOME and IBus.
+ It features longest-match tokenization, preedit text preview,
+ deterministic candidate ranking, offline dictionary lookups,
+ and zero telemetry or typing history leaks.
+

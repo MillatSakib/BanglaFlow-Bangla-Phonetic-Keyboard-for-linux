@@ -1,0 +1,14 @@
+#!/bin/sh
+set -e
+
+case "$1" in
+    remove|purge)
+        rm -rf /usr/lib/python3/dist-packages/banglaflow/__pycache__
+        rmdir --ignore-fail-on-non-empty /usr/lib/python3/dist-packages/banglaflow 2>/dev/null || true
+        rm -rf /usr/share/banglaflow
+        ;;
+esac
+
+#DEBHELPER#
+exit 0
+
