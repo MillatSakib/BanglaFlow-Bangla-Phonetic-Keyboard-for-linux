@@ -1,3 +1,12 @@
+banglaflow (0.1.0-3) resolute; urgency=medium
+
+  * Add comprehensive 177,000+ Bengali dictionary wordlist.
+  * Intelligent suggestion ranking: automatic chandrabindu matching (e.g. chad -> চাঁদ).
+  * Fast bisect prefix search for auto-completing longer words.
+  * Phonetic ambiguity expansion (o/O, v/bh, ch/chh, sh/s/S).
+
+ -- Sakib <sakib@example.com>  Thu, 29 Oct 2026 19:24:00 +0600
+
 banglaflow (0.1.0-2) resolute; urgency=medium
 
   * Fix IBus engine registration to use BanglaFlowEngine.__gtype__.

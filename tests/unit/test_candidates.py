@@ -45,3 +45,39 @@ def test_deterministic_order():
     cands2 = generator.generate_candidates("shonar")
     assert cands1 == cands2
 
+
+def test_candidates_chad_chondrobindhu():
+    engine = PhoneticEngine()
+    dict_mgr = BengaliDictionary()
+    generator = CandidateGenerator(engine, dict_mgr)
+
+    cands = generator.generate_candidates("chad")
+    assert len(cands) >= 1
+    # User requirement: 'chad' must intelligently suggest 'চাঁদ' with chandrabindu
+    assert cands[0] == "চাঁদ"
+    assert "ছাদ" in cands
+
+
+def test_candidates_chadmukh_and_prefix():
+    engine = PhoneticEngine()
+    dict_mgr = BengaliDictionary()
+    generator = CandidateGenerator(engine, dict_mgr)
+
+    cands_full = generator.generate_candidates("chadmukh")
+    assert cands_full[0] == "চাঁদমুখ"
+
+    # User requirement: typing prefix of longer word must suggest word
+    cands_prefix = generator.generate_candidates("chadm")
+    assert "চাঁদমুখ" in cands_prefix
+
+
+def test_candidates_prefix_completion():
+    engine = PhoneticEngine()
+    dict_mgr = BengaliDictionary()
+    generator = CandidateGenerator(engine, dict_mgr)
+
+    cands = generator.generate_candidates("bangl")
+    assert "বাংলা" in cands
+    assert "বাংলাদেশ" in cands
+
+

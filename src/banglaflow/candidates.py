@@ -4,7 +4,7 @@ Produces primary phonetic conversion, rule ambiguity alternatives,
 and frequency-ranked suggestions deterministically.
 """
 
-from typing import List, Set, Tuple
+from typing import Dict, List, Set, Tuple
 from banglaflow.phonetic import PhoneticEngine
 from banglaflow.dictionary import BengaliDictionary
 from banglaflow.unicode_utils import validate_bengali
@@ -23,21 +23,32 @@ class CandidateGenerator:
             return []
 
         primary = self.engine.convert(latin_input)
-        candidates_set: Set[str] = {primary}
 
-        # Generate phonetic variants for common Banglish transliteration ambiguities
-        variants_input: Set[str] = set()
+        # Candidate pool: word -> score
+        pool: Dict[str, int] = {}
+
+        # 1. Phonetic variants of Latin input
+        variants_input: Set[str] = {latin_input}
+        lower_input = latin_input.lower()
 
         # sh <-> Sh (শ vs ষ)
-        if "sh" in latin_input.lower():
+        if "sh" in lower_input:
             variants_input.add(latin_input.replace("sh", "Sh"))
             variants_input.add(latin_input.replace("Sh", "sh"))
             variants_input.add(latin_input.replace("sh", "s"))
+            variants_input.add(latin_input.replace("Sh", "s"))
 
         # s <-> sh / Sh
-        if "s" in latin_input.lower() and "sh" not in latin_input.lower():
+        if "s" in lower_input and "sh" not in lower_input:
             variants_input.add(latin_input.replace("s", "sh"))
             variants_input.add(latin_input.replace("s", "Sh"))
+
+        # c <-> ch / chh
+        if "c" in lower_input and "ch" not in lower_input:
+            variants_input.add(latin_input.replace("c", "ch"))
+        if "ch" in lower_input:
+            variants_input.add(latin_input.replace("ch", "c"))
+            variants_input.add(latin_input.replace("ch", "chh"))
 
         # i <-> I (হ্রস্ব-ই vs দীর্ঘ-ঈ)
         if "i" in latin_input:
@@ -50,6 +61,19 @@ class CandidateGenerator:
             variants_input.add(latin_input.replace("u", "U"))
         if "oo" in latin_input:
             variants_input.add(latin_input.replace("oo", "U"))
+
+        # o <-> O (অ vs ও-কার)
+        if "o" in latin_input:
+            variants_input.add(latin_input.replace("o", "O"))
+        if "O" in latin_input:
+            variants_input.add(latin_input.replace("O", "o"))
+
+        # v <-> bh
+        if "v" in lower_input:
+            variants_input.add(latin_input.replace("v", "bh"))
+            variants_input.add(latin_input.replace("V", "bh"))
+        if "bh" in lower_input:
+            variants_input.add(latin_input.replace("bh", "v"))
 
         # t <-> T, d <-> D, r <-> R, z <-> j
         if "t" in latin_input:
@@ -64,25 +88,51 @@ class CandidateGenerator:
         if "j" in latin_input:
             variants_input.add(latin_input.replace("j", "z"))
 
+        # Convert each variant to Bengali root
+        bengali_roots: Set[str] = {primary}
         for v in variants_input:
             conv = self.engine.convert(v)
             if conv and validate_bengali(conv)[0]:
-                candidates_set.add(conv)
+                bengali_roots.add(conv)
 
-        # Deterministic scoring:
-        # Score = dictionary frequency + (500 bonus for primary rule result)
-        scored_candidates: List[Tuple[int, str]] = []
-        for cand in candidates_set:
-            if not validate_bengali(cand)[0]:
-                continue
-            freq = self.dictionary.get_frequency(cand)
-            bonus = 500 if cand == primary else 0
-            total_score = freq + bonus
-            scored_candidates.append((total_score, cand))
+        # 2. Exact matches from dictionary for all roots
+        # For example, root 'চাদ' matches 'চাঁদ', 'ছাদ', 'ছাঁদ'
+        for root in bengali_roots:
+            exact_matches = self.dictionary.find_exact_matches(root)
+            for w in exact_matches:
+                pool[w] = max(pool.get(w, 0), self.dictionary.get_frequency(w) + 2000)
 
-        # Sort by score descending, then alphabetically for stability
-        scored_candidates.sort(key=lambda item: (-item[0], item[1]))
+        # 3. Add primary and phonetic roots to pool
+        for root in bengali_roots:
+            base_score = self.dictionary.get_frequency(root)
+            bonus = 1500 if root == primary else 500
+            pool[root] = max(pool.get(root, 0), base_score + bonus)
 
-        result = [cand for _, cand in scored_candidates]
-        return result[:max_candidates]
+        # 4. Prefix autocomplete matches if length >= 2
+        if len(latin_input) >= 2:
+            prefix_matches = self.dictionary.find_prefix_matches(primary, max_matches=25)
+            for w in prefix_matches:
+                if w not in pool:
+                    pool[w] = self.dictionary.get_frequency(w)
+
+            # Also check prefix matches for variants if pool is small
+            if len(pool) < max_candidates:
+                for root in bengali_roots:
+                    if root != primary:
+                        for w in self.dictionary.find_prefix_matches(root, max_matches=10):
+                            if w not in pool:
+                                pool[w] = self.dictionary.get_frequency(w)
+
+        # Filter valid Bengali
+        scored: List[Tuple[int, int, str]] = []
+        for cand, score in pool.items():
+            valid, _ = validate_bengali(cand)
+            if valid:
+                scored.append((score, len(cand), cand))
+
+        # Sort: score DESC, length ASC, alphabetical ASC
+        scored.sort(key=lambda item: (-item[0], item[1], item[2]))
+
+        # Return top deduplicated candidates
+        return [cand for _, _, cand in scored[:max_candidates]]
 

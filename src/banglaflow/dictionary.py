@@ -4,9 +4,10 @@ Supports frequency-ranked dictionary lookups and user dictionary persistence.
 Offline only: no network connections, strict local file permissions (0600).
 """
 
+import bisect
 import os
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Set, Tuple
 
 from banglaflow.unicode_utils import validate_bengali
 
@@ -15,11 +16,14 @@ class BengaliDictionary:
     """Manages bundled and user dictionaries for Bengali words."""
 
     MAX_WORD_LENGTH: int = 64
-    MAX_DICT_ENTRIES: int = 200_000
+    MAX_DICT_ENTRIES: int = 250_000
 
     def __init__(self, bundled_path: Optional[Path] = None, user_path: Optional[Path] = None):
         self._entries: Dict[str, int] = {}
         self._user_entries: Dict[str, int] = {}
+        self._exact_norm_map: Dict[str, List[str]] = {}
+        self._prefix_norm_keys: List[str] = []
+        self._prefix_words: List[str] = []
 
         # Default bundled dictionary location
         if bundled_path is None:
@@ -47,6 +51,73 @@ class BengaliDictionary:
         self.user_path = user_path
         if self.user_path.exists():
             self.load_tsv(self.user_path, is_user=True)
+
+        self._rebuild_search_index()
+
+    @staticmethod
+    def normalize_bn(text: str) -> str:
+        """Phonetic normalization for Bengali text (chandrabindu, vowels, sibilants, halant)."""
+        res = text.replace("\u0981", "")  # Remove chandrabindu
+        res = res.replace("\u09cd", "")   # Remove halant for prefix matching
+        res = res.replace("\u09c0", "\u09bf").replace("\u09c2", "\u09c1")
+        res = res.replace("\u0988", "\u0987").replace("\u098a", "\u0989")
+        res = res.replace("\u09b6", "\u09b8").replace("\u09b7", "\u09b8")
+        res = res.replace("\u09a3", "\u09a8")
+        res = res.replace("\u099b", "\u099a")
+        res = res.replace("\u09dc", "\u09b0").replace("\u09dd", "\u09b0")
+        res = res.replace("\u09a1", "\u09a6").replace("\u09a2", "\u09a7")
+        res = res.replace("\u099f", "\u09a4").replace("\u09a0", "\u09a5")
+        res = res.replace("\u099d", "\u099c").replace("\u09af", "\u09af\u09bc")
+        res = res.replace("\u09ce", "\u09a4")
+        return res
+
+    def _rebuild_search_index(self) -> None:
+        """Rebuild exact normalized lookup and prefix search structures."""
+        self._exact_norm_map = {}
+        all_words = set(self._entries.keys()) | set(self._user_entries.keys())
+
+        for w in all_words:
+            k = self.normalize_bn(w)
+            if k not in self._exact_norm_map:
+                self._exact_norm_map[k] = []
+            self._exact_norm_map[k].append(w)
+
+        for k in self._exact_norm_map:
+            self._exact_norm_map[k].sort(key=lambda w: (-self.get_frequency(w), len(w), w))
+
+        norm_pairs = sorted(
+            [(self.normalize_bn(w), w) for w in all_words],
+            key=lambda x: x[0],
+        )
+        self._prefix_norm_keys = [p[0] for p in norm_pairs]
+        self._prefix_words = [p[1] for p in norm_pairs]
+
+    def find_exact_matches(self, bengali_text: str) -> List[str]:
+        """Find all dictionary words matching the normalized phonetic form."""
+        k = self.normalize_bn(bengali_text)
+        return self._exact_norm_map.get(k, [])
+
+    def find_prefix_matches(self, bengali_prefix: str, max_matches: int = 20) -> List[str]:
+        """Find dictionary words starting with the normalized phonetic prefix."""
+        k = self.normalize_bn(bengali_prefix)
+        if not k:
+            return []
+
+        idx = bisect.bisect_left(self._prefix_norm_keys, k)
+        matches: List[str] = []
+        seen: Set[str] = set()
+
+        while idx < len(self._prefix_norm_keys) and self._prefix_norm_keys[idx].startswith(k):
+            w = self._prefix_words[idx]
+            if w not in seen:
+                seen.add(w)
+                matches.append(w)
+                if len(matches) >= 100:
+                    break
+            idx += 1
+
+        matches.sort(key=lambda w: (-self.get_frequency(w), len(w), w))
+        return matches[:max_matches]
 
     def load_tsv(self, file_path: Path, is_user: bool = False) -> int:
         """Load and validate words from a TSV file.
@@ -110,6 +181,7 @@ class BengaliDictionary:
             return False
 
         self._user_entries[word] = frequency
+        self._rebuild_search_index()
 
         # Ensure directory exists with 0700
         self.user_path.parent.mkdir(parents=True, exist_ok=True)

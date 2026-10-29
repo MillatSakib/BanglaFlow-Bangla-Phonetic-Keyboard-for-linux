@@ -1,5 +1,5 @@
 === Testing package installation in container ===
-Package: /home/sakib/Desktop/Banglish_Keybord/banglaflow_0.1.0-2_all.deb
+Package: /home/sakib/Desktop/Banglish_Keybord/banglaflow_0.1.0-3_all.deb
 --- [1] Updating apt and installing dependencies ---
 Reading package lists...
 Building dependency tree...
@@ -220,7 +220,7 @@ Get:138 http://archive.ubuntu.com/ubuntu noble/main amd64 ibus-data all 1.5.29-2
 Get:139 http://archive.ubuntu.com/ubuntu noble/main amd64 python3-ibus-1.0 all 1.5.29-2 [6962 B]
 Get:140 http://archive.ubuntu.com/ubuntu noble/main amd64 ibus amd64 1.5.29-2 [320 kB]
 debconf: delaying package configuration, since apt-utils is not installed
-Fetched 61.2 MB in 1min 13s (844 kB/s)
+Fetched 61.2 MB in 1min 4s (962 kB/s)
 Selecting previously unselected package libpython3.12-minimal:amd64.
 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 4381 files and directories currently installed.)
 Preparing to unpack .../libpython3.12-minimal_3.12.3-1ubuntu0.17_amd64.deb ...
@@ -720,8 +720,8 @@ Geographic area:
 Use of uninitialized value $_[1] in join or string at /usr/share/perl5/Debconf/DbDriver/Stack.pm line 112.
 
 Current default time zone: '/UTC'
-Local time is now:      Thu Oct 29 12:39:23 UTC 2026.
-Universal Time is now:  Thu Oct 29 12:39:23 UTC 2026.
+Local time is now:      Thu Oct 29 13:26:41 UTC 2026.
+Universal Time is now:  Thu Oct 29 13:26:41 UTC 2026.
 Run 'dpkg-reconfigure tzdata' if you wish to change it.
 
 Use of uninitialized value $val in substitution (s///) at /usr/share/perl5/Debconf/Format/822.pm line 84, <GEN6> line 4.
@@ -850,21 +850,21 @@ Processing triggers for libgdk-pixbuf-2.0-0:amd64 (2.42.10+dfsg-3ubuntu3.3) ...
 Selecting previously unselected package banglaflow.
 (Reading database ... 21251 files and directories currently installed.)
 Preparing to unpack /tmp/banglaflow.deb ...
-Unpacking banglaflow (0.1.0-2) ...
-Setting up banglaflow (0.1.0-2) ...
+Unpacking banglaflow (0.1.0-3) ...
+Setting up banglaflow (0.1.0-3) ...
 --- [3] Verifying files installed ---
 --- [4] Smoke testing python module in container ---
 Smoke test inside container OK: আমি বাংলা লিখি
 --- [5] Testing upgrade (reinstall) ---
 (Reading database ... 21276 files and directories currently installed.)
 Preparing to unpack /tmp/banglaflow.deb ...
-Unpacking banglaflow (0.1.0-2) over (0.1.0-2) ...
-Setting up banglaflow (0.1.0-2) ...
+Unpacking banglaflow (0.1.0-3) over (0.1.0-3) ...
+Setting up banglaflow (0.1.0-3) ...
 --- [6] Testing remove ---
 (Reading database ... 21276 files and directories currently installed.)
-Removing banglaflow (0.1.0-2) ...
+Removing banglaflow (0.1.0-3) ...
 --- [7] Testing purge ---
 (Reading database ... 21252 files and directories currently installed.)
-Purging configuration files for banglaflow (0.1.0-2) ...
+Purging configuration files for banglaflow (0.1.0-3) ...
 --- Container test sequence completed successfully! ---
 === test-install-container.sh PASSED ===
