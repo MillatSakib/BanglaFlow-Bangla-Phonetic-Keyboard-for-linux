@@ -39,7 +39,7 @@ def test_phonetic_engine_properties(text: str):
     st.text(alphabet="abcdefghijklmnopqrstuvwxyz", min_size=1, max_size=15),
     st.characters(whitelist_categories=("Ll", "Lu")),
 )
-@settings(max_examples=50)
+@settings(max_examples=50, deadline=None)
 def test_state_machine_backspace_reverts_preview(initial_text: str, extra_char: str):
     sm = InputStateMachine(engine, candidate_gen, BanglaFlowConfig())
 

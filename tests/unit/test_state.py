@@ -254,3 +254,71 @@ def test_isolation_between_instances():
     assert not sm2.composing
     assert sm2.phonetic_buffer == ""
 
+
+def test_function_keys_and_system_keys_pass_through():
+    from banglaflow.state import (
+        KEY_F1, KEY_F5, KEY_F12, KEY_SYSTEM_PASS_THROUGH, KEY_MODIFIERS_AND_LOCKS
+    )
+    sm = make_state_machine()
+    # F1-F12 pass through when idle
+    for k in (KEY_F1, KEY_F5, KEY_F12):
+        handled, actions = sm.process_key_event(k, 0, 0, is_release=False)
+        assert not handled
+        assert len(actions) == 0
+
+    # F-key while composing commits word first, then passes through
+    type_string(sm, "ami")
+    assert sm.composing
+    handled, actions = sm.process_key_event(KEY_F5, 0, 0, is_release=False)
+    assert not handled
+    assert not sm.composing
+    commits = [a.text for a in actions if isinstance(a, Commit)]
+    assert commits == ["আমি"]
+
+    # Delete, PrintScreen, Bare modifiers never consumed
+    for k in KEY_SYSTEM_PASS_THROUGH:
+        handled, actions = sm.process_key_event(k, 0, 0, is_release=False)
+        assert not handled
+
+    for k in KEY_MODIFIERS_AND_LOCKS:
+        handled, actions = sm.process_key_event(k, 0, 0, is_release=False)
+        assert not handled
+
+
+def test_numpad_digits_and_operators():
+    from banglaflow.state import (
+        KEY_KP_0, KEY_KP_1, KEY_KP_ADD, KEY_KP_SUBTRACT, KEY_KP_MULTIPLY, KEY_KP_DECIMAL
+    )
+    sm = make_state_machine()
+    sm.config.bengali_digits = True
+
+    # NumPad digits commit Bengali digits
+    handled, actions = sm.process_key_event(KEY_KP_1, 0, 0, is_release=False)
+    assert handled
+    assert [a.text for a in actions if isinstance(a, Commit)] == ["১"]
+
+    # NumPad operators commit clean arithmetic characters
+    handled, actions = sm.process_key_event(KEY_KP_ADD, 0, 0, is_release=False)
+    assert handled
+    assert [a.text for a in actions if isinstance(a, Commit)] == ["+"]
+
+    handled, actions = sm.process_key_event(KEY_KP_SUBTRACT, 0, 0, is_release=False)
+    assert handled
+    assert [a.text for a in actions if isinstance(a, Commit)] == ["-"]
+
+    # NumPad operator while composing commits atomically
+    type_string(sm, "ami")
+    handled, actions = sm.process_key_event(KEY_KP_ADD, 0, 0, is_release=False)
+    assert handled
+    assert [a.text for a in actions if isinstance(a, Commit)] == ["আমি+"]
+    assert not sm.composing
+
+
+def test_backtick_direct_output_when_not_composing():
+    sm = make_state_machine()
+    handled, actions = sm.process_key_event(ord("`"), 0, 0, is_release=False)
+    assert handled
+    assert [a.text for a in actions if isinstance(a, Commit)] == ["`"]
+    assert not sm.composing
+
+

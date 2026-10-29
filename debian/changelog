@@ -1,3 +1,12 @@
+banglaflow (0.1.0-6) resolute; urgency=medium
+
+  * Fix NumPad keys outputting garbled Halfwidth forms; support digits 0-9 and operators +, -, *, /, .
+  * Allow Backtick (`) to output directly when not composing.
+  * Preserve native system functionality for Function keys (F1-F12), Esc, Delete, PrintScreen, ScrollLock.
+  * Guard all special X11 keysyms (0xFF00-0xFFFF) from being converted to chr() or hijacking input.
+
+ -- Sakib <sakib@example.com>  Thu, 29 Oct 2026 20:38:00 +0600
+
 banglaflow (0.1.0-5) resolute; urgency=medium
 
   * Fix Bengali Dari (.) wiping out composing word on commit by making commit atomic.
