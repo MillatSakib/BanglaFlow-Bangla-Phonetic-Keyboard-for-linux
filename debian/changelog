@@ -1,3 +1,14 @@
+banglaflow (1.0.0-1) resolute; urgency=medium
+
+  * Official 1.0.0 Stable Release.
+  * Support Bisarga via Colon (:) during composition (e.g. du:kho -> দুঃখ).
+  * Support explicit Hasanta via double comma (,,) during composition (e.g. k,, -> ক্‌).
+  * Add double consonant to Z-fola phonetic suggestions (e.g. somossa -> সমস্যা, dhonnobad -> ধন্যবাদ).
+  * Unified number behavior: Bengali digits (০-৯) when enabled, English digits (0-9) when disabled across both top row and NumPad.
+  * Full Avro Phonetic compatibility, clean system function keys (F1-F12), and zero switch delay.
+
+ -- Sakib <sakib@example.com>  Thu, 30 Oct 2026 00:10:00 +0600
+
 banglaflow (0.1.0-6) resolute; urgency=medium
 
   * Fix NumPad keys outputting garbled Halfwidth forms; support digits 0-9 and operators +, -, *, /, .

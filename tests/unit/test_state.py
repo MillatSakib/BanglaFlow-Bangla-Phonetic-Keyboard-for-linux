@@ -322,3 +322,26 @@ def test_backtick_direct_output_when_not_composing():
     assert not sm.composing
 
 
+def test_bisarga_colon_and_hasanta_comma():
+    sm = make_state_machine()
+    # Colon during composition produces Bisarga (দুঃখ)
+    type_string(sm, "du:kho")
+    assert sm.bengali_preview == "দুঃখ"
+
+    # Reset
+    sm.clear()
+    # Double comma during composition produces Hasanta (ক্‌)
+    type_string(sm, "k,,")
+    assert "ক্" in sm.bengali_preview
+
+
+def test_double_consonant_variants():
+    from banglaflow.engine import BengaliDictionary, PhoneticEngine, CandidateGenerator
+    d = BengaliDictionary.get_shared_instance()
+    pe = PhoneticEngine()
+    cg = CandidateGenerator(pe, d)
+    cands = cg.generate_candidates("somossa")
+    assert "সমস্যা" in cands
+
+
+

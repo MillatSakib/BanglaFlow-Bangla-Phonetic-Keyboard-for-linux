@@ -88,6 +88,20 @@ class CandidateGenerator:
         if "j" in latin_input:
             variants_input.add(latin_input.replace("j", "z"))
 
+        # Double consonant <-> Z-fola / common spelling variants (e.g. somossa -> সমস্যা)
+        if "ss" in lower_input:
+            variants_input.add(latin_input.replace("ss", "sy"))
+        if "nn" in lower_input:
+            variants_input.add(latin_input.replace("nn", "ny"))
+        if "kk" in lower_input:
+            variants_input.add(latin_input.replace("kk", "ky"))
+        if "tt" in lower_input:
+            variants_input.add(latin_input.replace("tt", "ty"))
+        if "mm" in lower_input:
+            variants_input.add(latin_input.replace("mm", "my"))
+        if "cc" in lower_input:
+            variants_input.add(latin_input.replace("cc", "cy"))
+
         # Convert each variant to Bengali root
         bengali_roots: Set[str] = {primary}
         for v in variants_input:

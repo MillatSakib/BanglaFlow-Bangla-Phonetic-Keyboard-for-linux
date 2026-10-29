@@ -12,7 +12,12 @@ from banglaflow.unicode_utils import sanitize_bengali_sequence
 class PhoneticEngine:
     """Pure Bengali phonetic conversion engine."""
 
-    def __init__(self, ruleset: Optional[RuleSet] = None, map_dari: bool = True, bengali_digits: bool = False):
+    def __init__(
+        self,
+        ruleset: Optional[RuleSet] = None,
+        map_dari: bool = True,
+        bengali_digits: bool = True,
+    ):
         self.ruleset = ruleset or load_rules()
         self.map_dari = map_dari
         self.bengali_digits = bengali_digits
@@ -60,18 +65,25 @@ class PhoneticEngine:
             start = cur
             matched = False
 
-            # Check digit mapping if enabled
-            if self.bengali_digits and fixed_str[cur].isdigit():
-                digit_cp = 0x09E6 + (ord(fixed_str[cur]) - ord("0"))
-                output.append(chr(digit_cp))
+            # Check digit mapping: if enabled output Bengali digit, otherwise preserve ASCII digit
+            if fixed_str[cur].isdigit():
+                if self.bengali_digits:
+                    digit_cp = 0x09E6 + (ord(fixed_str[cur]) - ord("0"))
+                    output.append(chr(digit_cp))
+                else:
+                    output.append(fixed_str[cur])
                 cur += 1
                 continue
 
             # Check Dari mapping
             if self.map_dari and fixed_str[cur] == ".":
-                # Check for double dot .. or single dot
+                # Check for double dot .., escaped dot .`, or single dot
                 if cur + 1 < length and fixed_str[cur + 1] == ".":
                     output.append("\u0965")  # ॥
+                    cur += 2
+                    continue
+                elif cur + 1 < length and fixed_str[cur + 1] == "`":
+                    output.append(".")  # Escaped period .
                     cur += 2
                     continue
                 else:

@@ -444,7 +444,27 @@ class InputStateMachine:
 
         char = chr(keyval)
 
-        # 9. Punctuation handling
+        # 17. Phonetic Composition handling
+        # Alphanumeric characters, backtick, caret (^), and while composing: colon (:) for bisarga, comma (,) for hasanta
+        is_composing_char = (
+            char.isalnum()
+            or char in ("`", "^")
+            or (self.composing and char in (":", ","))
+        )
+
+        if is_composing_char:
+            if len(self.phonetic_buffer) >= self.config.max_buffer_len:
+                # Buffer overflow safety: commit current and start fresh
+                cand = self._get_selected_candidate()
+                actions.append(Commit(cand))
+                self.clear()
+
+            self.phonetic_buffer += char
+            self.composing = True
+            self._update_composition(actions)
+            return True, actions
+
+        # 18. Punctuation handling
         punctuation_marks = {",", ".", "?", "!", ";", ":", "'", '"', "(", ")", "[", "]", "{", "}"}
         if char in punctuation_marks or char == "$":
             # Bengali Dari । mapped from .
@@ -484,19 +504,6 @@ class InputStateMachine:
 
             # Return not-handled so app inserts punctuation cleanly without duplicate
             return False, actions
-
-        # 3. Regular letters and digits (composition)
-        if char.isalnum() or char in ("`", "^"):
-            if len(self.phonetic_buffer) >= self.config.max_buffer_len:
-                # Buffer overflow safety: commit current and start fresh
-                cand = self._get_selected_candidate()
-                actions.append(Commit(cand))
-                self.clear()
-
-            self.phonetic_buffer += char
-            self.composing = True
-            self._update_composition(actions)
-            return True, actions
 
         return False, []
 

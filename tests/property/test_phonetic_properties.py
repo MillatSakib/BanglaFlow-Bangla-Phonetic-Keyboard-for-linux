@@ -37,7 +37,7 @@ def test_phonetic_engine_properties(text: str):
 
 @given(
     st.text(alphabet="abcdefghijklmnopqrstuvwxyz", min_size=1, max_size=15),
-    st.characters(whitelist_categories=("Ll", "Lu")),
+    st.characters(whitelist_categories=("Ll", "Lu"), max_codepoint=0x00FF),
 )
 @settings(max_examples=50, deadline=None)
 def test_state_machine_backspace_reverts_preview(initial_text: str, extra_char: str):

@@ -4,7 +4,7 @@
 	<name>org.freedesktop.IBus.BanglaFlow</name>
 	<description>BanglaFlow Bengali Phonetic Input Method</description>
 	<exec>/usr/libexec/ibus-engine-banglaflow --ibus</exec>
-	<version>0.1.0</version>
+	<version>1.0.0</version>
 	<author>Sakib</author>
 	<license>GPL-3.0-or-later</license>
 	<homepage>https://github.com/sakib/banglaflow</homepage>

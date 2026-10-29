@@ -40,7 +40,7 @@ BanglaFlow is a native, lightweight, and system-wide Bengali phonetic input meth
 
 1. Download or build the `.deb` package:
    ```bash
-   sudo dpkg -i banglaflow_0.1.0-1_all.deb
+   sudo dpkg -i banglaflow.deb
    sudo apt-get install -f
    ```
 
@@ -102,7 +102,7 @@ OS: $(lsb_release -d)
 Desktop: $XDG_CURRENT_DESKTOP ($XDG_SESSION_TYPE)
 IBus Version: $(ibus version)
 Python: $(python3 --version)
-BanglaFlow Version: 0.1.0
+BanglaFlow Version: 1.0.0
 
 === Issue Description ===
 Input string: [e.g. "somporrko"]

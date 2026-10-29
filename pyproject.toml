@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "banglaflow"
-version = "0.1.0"
+version = "1.0.0"
 description = "Native Bengali Phonetic Input Method for Linux (IBus)"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -14,7 +14,7 @@ authors = [
 ]
 keywords = ["bengali", "bangla", "ibus", "input-method", "phonetic"]
 classifiers = [
-    "Development Status :: 4 - Beta",
+    "Development Status :: 5 - Production/Stable",
     "Environment :: X11 Applications :: Gnome",
     "Intended Audience :: End Users/Desktop",
     "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
