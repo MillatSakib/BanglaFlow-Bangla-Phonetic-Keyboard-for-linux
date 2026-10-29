@@ -1,3 +1,11 @@
+banglaflow (0.1.0-4) resolute; urgency=medium
+
+  * Strictly place primary phonetic conversion at candidate position 0 (edit panel).
+  * Never forcibly replace user keystrokes in preedit (e.g. s gives স, S gives শ, Sh gives ষ).
+  * Follow primary conversion with intelligently ranked suggestions and completions.
+
+ -- Sakib <sakib@example.com>  Thu, 29 Oct 2026 19:47:00 +0600
+
 banglaflow (0.1.0-3) resolute; urgency=medium
 
   * Add comprehensive 177,000+ Bengali dictionary wordlist.

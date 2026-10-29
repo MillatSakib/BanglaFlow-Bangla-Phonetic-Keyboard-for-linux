@@ -96,43 +96,52 @@ class CandidateGenerator:
                 bengali_roots.add(conv)
 
         # 2. Exact matches from dictionary for all roots
-        # For example, root 'চাদ' matches 'চাঁদ', 'ছাদ', 'ছাঁদ'
-        for root in bengali_roots:
+        # The primary conversion is ALWAYS candidate #0 (shown in edit panel),
+        # so suggestions_pool only collects alternative relevant candidates.
+        suggestions_pool: Dict[str, int] = {}
+
+        all_roots = [primary] + list(bengali_roots)
+        for root in all_roots:
             exact_matches = self.dictionary.find_exact_matches(root)
             for w in exact_matches:
-                pool[w] = max(pool.get(w, 0), self.dictionary.get_frequency(w) + 2000)
+                if w != primary:
+                    suggestions_pool[w] = max(
+                        suggestions_pool.get(w, 0), self.dictionary.get_frequency(w) + 2000
+                    )
 
-        # 3. Add primary and phonetic roots to pool
+        # 3. Add phonetic roots to suggestions
         for root in bengali_roots:
-            base_score = self.dictionary.get_frequency(root)
-            bonus = 1500 if root == primary else 500
-            pool[root] = max(pool.get(root, 0), base_score + bonus)
+            if root != primary:
+                base_score = self.dictionary.get_frequency(root)
+                suggestions_pool[root] = max(suggestions_pool.get(root, 0), base_score + 500)
 
         # 4. Prefix autocomplete matches if length >= 2
         if len(latin_input) >= 2:
             prefix_matches = self.dictionary.find_prefix_matches(primary, max_matches=25)
             for w in prefix_matches:
-                if w not in pool:
-                    pool[w] = self.dictionary.get_frequency(w)
+                if w != primary and w not in suggestions_pool:
+                    suggestions_pool[w] = self.dictionary.get_frequency(w)
 
             # Also check prefix matches for variants if pool is small
-            if len(pool) < max_candidates:
+            if len(suggestions_pool) < max_candidates:
                 for root in bengali_roots:
                     if root != primary:
                         for w in self.dictionary.find_prefix_matches(root, max_matches=10):
-                            if w not in pool:
-                                pool[w] = self.dictionary.get_frequency(w)
+                            if w != primary and w not in suggestions_pool:
+                                suggestions_pool[w] = self.dictionary.get_frequency(w)
 
         # Filter valid Bengali
         scored: List[Tuple[int, int, str]] = []
-        for cand, score in pool.items():
+        for cand, score in suggestions_pool.items():
             valid, _ = validate_bengali(cand)
             if valid:
                 scored.append((score, len(cand), cand))
 
-        # Sort: score DESC, length ASC, alphabetical ASC
+        # Sort suggestions: score DESC, length ASC, alphabetical ASC
         scored.sort(key=lambda item: (-item[0], item[1], item[2]))
 
-        # Return top deduplicated candidates
-        return [cand for _, _, cand in scored[:max_candidates]]
+        # Primary conversion is ALWAYS #0 (shown in edit panel),
+        # followed by the most relevant suggestions in order.
+        result = [primary] + [cand for _, _, cand in scored]
+        return result[:max_candidates]
 

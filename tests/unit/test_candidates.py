@@ -15,16 +15,16 @@ def test_candidates_ami():
     assert cands[0] == "আমি"
 
 
-def test_candidates_bhasha_ranks_dictionary_match_first():
+def test_candidates_bhasha_ranks_dictionary_match():
     engine = PhoneticEngine()
     dict_mgr = BengaliDictionary()
     generator = CandidateGenerator(engine, dict_mgr)
 
     cands = generator.generate_candidates("bhasha")
     assert len(cands) >= 2
-    # Even though pure rule produces ভাশা, dictionary has ভাষা which must rank #1
-    assert cands[0] == "ভাষা"
-    assert "ভাশা" in cands
+    # Primary conversion is in edit panel at index 0, followed by dictionary matches
+    assert cands[0] == "ভাশা"
+    assert "ভাষা" in cands
 
 
 def test_candidates_bangla():
@@ -46,16 +46,38 @@ def test_deterministic_order():
     assert cands1 == cands2
 
 
+def test_candidates_s_and_S():
+    """User requirement: typing 's' must give 'স', typing 'S' must give 'শ', typing 'Sh' must give 'ষ'."""
+    engine = PhoneticEngine()
+    dict_mgr = BengaliDictionary()
+    generator = CandidateGenerator(engine, dict_mgr)
+
+    cands_s = generator.generate_candidates("s")
+    assert cands_s[0] == "স"
+    assert "শ" in cands_s
+    assert "ষ" in cands_s
+
+    cands_S = generator.generate_candidates("S")
+    assert cands_S[0] == "শ"
+    assert "স" in cands_S
+    assert "ষ" in cands_S
+
+    cands_Sh = generator.generate_candidates("Sh")
+    assert cands_Sh[0] == "ষ"
+    assert "শ" in cands_Sh
+    assert "স" in cands_Sh
+
+
 def test_candidates_chad_chondrobindhu():
     engine = PhoneticEngine()
     dict_mgr = BengaliDictionary()
     generator = CandidateGenerator(engine, dict_mgr)
 
     cands = generator.generate_candidates("chad")
-    assert len(cands) >= 1
-    # User requirement: 'chad' must intelligently suggest 'চাঁদ' with chandrabindu
-    assert cands[0] == "চাঁদ"
-    assert "ছাদ" in cands
+    assert len(cands) >= 2
+    # Direct conversion in edit panel, followed by chandrabindu suggestion
+    assert cands[0] == "ছাদ"
+    assert "চাঁদ" in cands
 
 
 def test_candidates_chadmukh_and_prefix():
@@ -64,7 +86,8 @@ def test_candidates_chadmukh_and_prefix():
     generator = CandidateGenerator(engine, dict_mgr)
 
     cands_full = generator.generate_candidates("chadmukh")
-    assert cands_full[0] == "চাঁদমুখ"
+    assert cands_full[0] == "ছাদ্মুখ"
+    assert "চাঁদমুখ" in cands_full
 
     # User requirement: typing prefix of longer word must suggest word
     cands_prefix = generator.generate_candidates("chadm")
