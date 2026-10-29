@@ -1,0 +1,12 @@
+#!/bin/sh
+set -e
+
+# Remove system links
+rm -f /usr/share/ibus/component/banglaflow.xml
+rm -f /usr/libexec/ibus-engine-banglaflow
+if [ -L /usr/share/banglaflow ]; then
+    rm -f /usr/share/banglaflow
+fi
+
+# Restart IBus daemon
+ibus restart >/dev/null 2>&1 || true

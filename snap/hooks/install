@@ -1,0 +1,20 @@
+#!/bin/sh
+set -e
+
+# Link the IBus component XML into system IBus component search path
+if [ -d /usr/share/ibus/component ]; then
+    ln -sf "$SNAP/usr/share/ibus/component/banglaflow.xml" /usr/share/ibus/component/banglaflow.xml
+fi
+
+# Link launcher into /usr/libexec so IBus daemon can execute it
+if [ -d /usr/libexec ]; then
+    ln -sf "$SNAP/usr/libexec/ibus-engine-banglaflow" /usr/libexec/ibus-engine-banglaflow
+fi
+
+# Link application assets directory
+if [ ! -d /usr/share/banglaflow ]; then
+    ln -sf "$SNAP/usr/share/banglaflow" /usr/share/banglaflow
+fi
+
+# Restart IBus daemon to pick up the new engine if user session is active
+ibus restart >/dev/null 2>&1 || true

@@ -1,0 +1,40 @@
+name: banglaflow
+base: core24
+version: '1.0.1'
+summary: Native Bengali Phonetic Keyboard for Linux (IBus)
+description: |
+  BanglaFlow is a fast, lightweight, and offline Bengali phonetic input method
+  for Linux desktops (Ubuntu GNOME Wayland & X11). Features full Avro phonetic
+  layout compatibility with a 177k+ pre-warmed dictionary cache.
+  Developed by Kovence (https://kovence.com).
+
+grade: stable
+confinement: classic
+icon: data/icons/banglaflow-512.png
+
+apps:
+  banglaflow:
+    command: usr/libexec/ibus-engine-banglaflow --ibus
+
+parts:
+  banglaflow:
+    plugin: nil
+    source: .
+    override-build: |
+      mkdir -p $CRAFT_PART_INSTALL/usr/lib/python3/dist-packages/banglaflow
+      cp -r src/banglaflow/* $CRAFT_PART_INSTALL/usr/lib/python3/dist-packages/banglaflow/
+
+      mkdir -p $CRAFT_PART_INSTALL/usr/libexec
+      install -m 755 src/ibus-engine-banglaflow $CRAFT_PART_INSTALL/usr/libexec/ibus-engine-banglaflow
+
+      mkdir -p $CRAFT_PART_INSTALL/usr/share/ibus/component
+      install -m 644 data/ibus/banglaflow.xml $CRAFT_PART_INSTALL/usr/share/ibus/component/banglaflow.xml
+
+      mkdir -p $CRAFT_PART_INSTALL/usr/share/banglaflow/rules
+      install -m 644 data/rules/* $CRAFT_PART_INSTALL/usr/share/banglaflow/rules/
+
+      mkdir -p $CRAFT_PART_INSTALL/usr/share/banglaflow/dictionaries
+      install -m 644 data/dictionaries/* $CRAFT_PART_INSTALL/usr/share/banglaflow/dictionaries/
+
+      mkdir -p $CRAFT_PART_INSTALL/usr/share/banglaflow/icons
+      install -m 644 data/icons/* $CRAFT_PART_INSTALL/usr/share/banglaflow/icons/
