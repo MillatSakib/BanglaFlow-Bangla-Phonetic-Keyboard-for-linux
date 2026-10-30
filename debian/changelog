@@ -1,3 +1,14 @@
+banglaflow (1.0.1-1) resolute; urgency=medium
+
+  * Bugfix release: 1.0.1
+  * Direct digit typing: top row numbers and keypad numbers unconditionally type digits without hijacking candidate selection.
+  * Fix preedit erasing bug in Chrome/GTK on mouse click and Space commit.
+  * Update engine symbol to 'bn' for clean GNOME Shell top panel indicator.
+  * Add official GNU General Public License v3.0 text.
+  * Fix bisarga colon handling.
+
+ -- Sakib <sakib@example.com>  Fri, 30 Oct 2026 16:20:00 +0600
+
 banglaflow (1.0.0-1) resolute; urgency=medium
 
   * Official 1.0.0 Stable Release.

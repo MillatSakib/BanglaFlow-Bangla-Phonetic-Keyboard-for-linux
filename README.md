@@ -102,7 +102,7 @@ OS: $(lsb_release -d)
 Desktop: $XDG_CURRENT_DESKTOP ($XDG_SESSION_TYPE)
 IBus Version: $(ibus version)
 Python: $(python3 --version)
-BanglaFlow Version: 1.0.0
+BanglaFlow Version: 1.0.1
 
 === Issue Description ===
 Input string: [e.g. "somporrko"]
