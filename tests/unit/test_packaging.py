@@ -31,7 +31,7 @@ def test_component_xml_validity():
     assert engine is not None
     assert engine.findtext("name") == "banglaflow"
     assert engine.findtext("language") == "bn"
-    assert engine.findtext("symbol") == "বা"
+    assert engine.findtext("symbol") == "bn"
 
 
 def test_launcher_executable():

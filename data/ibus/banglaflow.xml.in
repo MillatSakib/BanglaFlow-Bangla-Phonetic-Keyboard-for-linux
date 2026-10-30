@@ -21,7 +21,7 @@
 			<longname>BanglaFlow</longname>
 			<description>BanglaFlow Bengali Phonetic Input Method</description>
 			<rank>0</rank>
-			<symbol>বা</symbol>
+			<symbol>bn</symbol>
 		</engine>
 	</engines>
 </component>
