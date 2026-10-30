@@ -2,18 +2,129 @@
 <html lang="en" class="scroll-smooth dark">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" href="./favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>BanglaFlow - Native Bengali Phonetic Keyboard for Linux</title>
-    <meta name="description" content="Fast, offline, and zero-delay Bengali phonetic input method designed natively for Ubuntu and Linux desktops (Wayland & X11)." />
-    <meta name="theme-color" content="#0d9488" />
+    <title>BanglaFlow — Native Bengali Phonetic Keyboard for Linux (Ubuntu, Wayland, GNOME)</title>
+    
+    <!-- Primary Meta Tags -->
+    <meta name="title" content="BanglaFlow — Native Bengali Phonetic Keyboard for Linux (Ubuntu, Wayland, GNOME)" />
+    <meta name="description" content="Lightweight, pure-Python Bengali phonetic keyboard (Avro layout) for Linux GNOME, Wayland & X11. 100% offline, zero switch delay, 177,000+ dictionary cache, and privacy-first." />
+    <meta name="keywords" content="BanglaFlow, Bengali keyboard Linux, Avro Linux, Bangla phonetic typing Ubuntu, IBus Bengali phonetic, Avro for Ubuntu 24.04, Wayland Bengali keyboard, Linux Bangla typing, Avro keyboard Linux, pure Python ibus engine" />
+    <meta name="author" content="Millat Sakib, Kovence" />
+    <meta name="publisher" content="Kovence" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="theme-color" content="#10b981" />
+    <link rel="canonical" href="https://banglaflow.kovence.com/" />
+    
+    <!-- Favicon & Icons -->
+    <link rel="icon" type="image/png" href="./favicon.png" />
+    <link rel="apple-touch-icon" href="./logo.png" />
+
+    <!-- Open Graph / Facebook / LinkedIn / Discord -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://banglaflow.kovence.com/" />
+    <meta property="og:site_name" content="BanglaFlow" />
+    <meta property="og:title" content="BanglaFlow — Native Bengali Phonetic Keyboard for Linux" />
+    <meta property="og:description" content="Blazing fast, 100% offline, zero switch delay, and full Avro phonetic layout compatibility for Ubuntu & Linux desktops." />
+    <meta property="og:image" content="https://banglaflow.kovence.com/logo.png" />
+    <meta property="og:image:alt" content="BanglaFlow Logo - Bengali Keyboard for Linux" />
+    <meta property="og:image:width" content="512" />
+    <meta property="og:image:height" content="512" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://banglaflow.kovence.com/" />
+    <meta name="twitter:title" content="BanglaFlow — Native Bengali Phonetic Keyboard for Linux" />
+    <meta name="twitter:description" content="Experience effortless Bengali typing natively on Linux with zero lag, 100% privacy, and complete Avro compatibility." />
+    <meta name="twitter:image" content="https://banglaflow.kovence.com/logo.png" />
+
+    <!-- Performance & Font Preconnections -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Noto+Sans+Bengali:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Schema.org Structured Data: SoftwareApplication & WebSite -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebSite",
+          "@id": "https://banglaflow.kovence.com/#website",
+          "url": "https://banglaflow.kovence.com/",
+          "name": "BanglaFlow",
+          "description": "Native Bengali Phonetic Keyboard for Linux (Ubuntu, Debian, Wayland & X11)",
+          "publisher": {
+            "@type": "Organization",
+            "name": "Kovence",
+            "url": "https://kovence.com"
+          }
+        },
+        {
+          "@type": "SoftwareApplication",
+          "@id": "https://banglaflow.kovence.com/#software",
+          "name": "BanglaFlow",
+          "operatingSystem": "Linux (Ubuntu 24.04, Ubuntu 26.04, Debian, Fedora, Arch)",
+          "applicationCategory": "UtilitiesApplication",
+          "softwareVersion": "1.0.1",
+          "license": "https://www.gnu.org/licenses/gpl-3.0.html",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+          },
+          "downloadUrl": "https://github.com/MillatSakib/BanglaFlow-Bangla-Phonetic-Keyboard-for-linux/releases/latest",
+          "description": "BanglaFlow is a lightweight, pure-Python Bengali phonetic input method (Avro layout compatible) designed natively for Linux desktop environments with GNOME and IBus. Features zero-lag switching, 177,000+ offline dictionary words, and 100% offline privacy.",
+          "author": {
+            "@type": "Person",
+            "name": "Millat Sakib",
+            "url": "https://github.com/MillatSakib"
+          }
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://banglaflow.kovence.com/#faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "How do I install BanglaFlow on Ubuntu and Debian?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Download the latest .deb package from the website or install via Snap using 'sudo snap install --classic banglaflow'. Then run 'ibus restart' in the terminal and add BanglaFlow from GNOME Settings > Keyboard > Input Sources."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Is BanglaFlow fully compatible with Avro Phonetic layout?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes! BanglaFlow provides full Avro phonetic layout compatibility with context-aware transliteration, exact candidate ranking, modifiers (colon for Bisarga, double comma for Hasanta, dollar for Taka, period for Dari), and native digits."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Does BanglaFlow work on Wayland and GNOME Shell?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. BanglaFlow is engineered natively for the modern IBus input framework with first-class support on Ubuntu GNOME (both Wayland and X11 sessions) with zero cursor jumping and a clean 'bn' top panel indicator."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Does BanglaFlow require internet or collect keystroke telemetry?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No. BanglaFlow is 100% offline, privacy-first, and contains zero network calls, zero analytics, and zero data logging. Keystrokes never leave your local machine."
+              }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
   </head>
   <body class="bg-slate-950 text-slate-100 font-sans selection:bg-emerald-500 selection:text-white antialiased overflow-x-hidden">
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
-

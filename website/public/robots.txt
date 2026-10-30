@@ -1,0 +1,6 @@
+# BanglaFlow Robots.txt
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://banglaflow.kovence.com/sitemap.xml

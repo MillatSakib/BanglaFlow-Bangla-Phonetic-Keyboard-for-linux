@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { 
   Download, Terminal, Check, Copy, ExternalLink, ShieldCheck, Zap, 
   Keyboard, Sparkles, Cpu, BookOpen, Layers, ArrowRight, Star, 
-  Monitor, CheckCircle2, AlertCircle, RefreshCw, ChevronRight, Hash
+  Monitor, CheckCircle2, AlertCircle, RefreshCw, ChevronRight, ChevronDown, Hash, HelpCircle
 } from 'lucide-react';
 import { transliterate } from './phonetic.js';
 
@@ -23,6 +23,30 @@ export default function App() {
   const [demoOutput, setDemoOutput] = useState("");
   const [installTab, setInstallTab] = useState("deb");
   const [cheatTab, setCheatTab] = useState("vowels");
+  const [openFaq, setOpenFaq] = useState(0);
+
+  const faqs = [
+    {
+      q: "How do I install BanglaFlow on Ubuntu and Debian?",
+      a: "Download the latest official .deb package and install it using 'sudo dpkg -i banglaflow.deb' or install via Canonical Snap Store with 'sudo snap install --classic banglaflow'. Afterwards, run 'ibus restart' to reload the engine and enable BanglaFlow from GNOME Settings → Keyboard → Input Sources."
+    },
+    {
+      q: "Is BanglaFlow fully compatible with the Avro Phonetic layout?",
+      a: "Yes! BanglaFlow provides complete Avro Phonetic layout compatibility. It includes longest-match context-aware transliteration, vowel kars, conjuncts, phonetic modifiers (colon for Bisarga, double comma for Hasanta, dollar for Taka, period for Dari), and native digits."
+    },
+    {
+      q: "Does BanglaFlow work on modern Wayland and GNOME Shell?",
+      a: "Yes. BanglaFlow is engineered natively for modern IBus, providing first-class support on Ubuntu GNOME (both Wayland and X11 sessions) with zero cursor jumping, rock-solid session stability, and a clean 'bn' top panel indicator symbol."
+    },
+    {
+      q: "Does BanglaFlow collect keystroke telemetry or require internet access?",
+      a: "No. BanglaFlow is 100% offline, privacy-first, and contains zero network calls, zero telemetry, and no background daemons. Keystrokes are strictly processed in-memory on your local machine."
+    },
+    {
+      q: "How does BanglaFlow fix the switch lag and word deletion bugs of old Avro engines?",
+      a: "BanglaFlow pre-warms a compiled 177,000+ binary dictionary cache for 0.001s instant keyboard switching, and utilizes atomic commits to prevent spaces or punctuation from erasing preceding words."
+    }
+  ];
 
   // Dynamic GitHub Release State
   const [releaseInfo, setReleaseInfo] = useState({
@@ -79,7 +103,7 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
           <a href="#" className="flex items-center gap-3 group">
             <div className="w-11 h-11 rounded-xl bg-gradient-to-tr from-emerald-500 to-cyan-500 p-0.5 shadow-lg shadow-emerald-500/20 group-hover:scale-105 transition-transform duration-300">
-              <img src="./logo.png" alt="BanglaFlow Logo" className="w-full h-full object-cover rounded-[10px]" />
+              <img src="./logo.png" alt="BanglaFlow Logo - Native Bengali Phonetic Keyboard for Linux" width="44" height="44" className="w-full h-full object-cover rounded-[10px]" />
             </div>
             <div>
               <div className="flex items-center gap-2">
@@ -98,6 +122,7 @@ export default function App() {
             <a href="#cheatsheet" className="hover:text-emerald-400 transition-colors">Cheat Sheet</a>
             <a href="#comparison" className="hover:text-emerald-400 transition-colors">Comparison</a>
             <a href="#install" className="hover:text-emerald-400 transition-colors">Install</a>
+            <a href="#faq" className="hover:text-emerald-400 transition-colors">FAQ</a>
           </nav>
 
           <div className="flex items-center gap-3">
@@ -202,25 +227,28 @@ export default function App() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
                 <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">
-                    Type Banglish / English Phonetic:
-                  </label>
-                  <div className="relative">
-                    <input 
-                      type="text" 
-                      value={demoInput}
-                      onChange={(e) => setDemoInput(e.target.value)}
-                      placeholder="Type e.g. amar sonar bangla ami..."
-                      className="w-full px-4 py-3.5 rounded-xl bg-slate-900/90 border border-slate-700/80 text-white font-mono text-base focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all placeholder:text-slate-600"
-                    />
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400">
+                      Type Banglish / English Phonetic:
+                    </label>
                     {demoInput && (
                       <button 
                         onClick={() => setDemoInput("")} 
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 text-xs px-2 py-1 rounded bg-slate-800"
+                        className="text-slate-400 hover:text-white hover:bg-slate-800 text-xs px-2.5 py-0.5 rounded-md border border-slate-700/60 transition-colors flex items-center gap-1"
+                        title="Clear input text"
                       >
                         Clear
                       </button>
                     )}
+                  </div>
+                  <div>
+                    <textarea 
+                      value={demoInput}
+                      onChange={(e) => setDemoInput(e.target.value)}
+                      placeholder="Type e.g. amar sonar bangla ami..."
+                      rows={4}
+                      className="w-full p-4 rounded-xl bg-slate-900/90 border border-slate-700/80 text-white font-mono text-base focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all placeholder:text-slate-600 resize-none leading-relaxed"
+                    />
                   </div>
 
                   {/* Preset quick test tags */}
@@ -239,20 +267,23 @@ export default function App() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-emerald-400 mb-2">
-                    Instant Bengali Output:
-                  </label>
-                  <div className="w-full px-4 py-3.5 rounded-xl bg-slate-900/50 border border-emerald-500/30 text-emerald-300 font-bengali text-2xl font-semibold min-h-[54px] flex items-center justify-between shadow-inner">
-                    <span>{demoOutput || <span className="text-slate-600 font-sans text-sm font-normal">Transliterated text will appear here...</span>}</span>
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="block text-xs font-semibold uppercase tracking-wider text-emerald-400">
+                      Instant Bengali Output:
+                    </label>
                     {demoOutput && (
                       <button 
                         onClick={() => copyToClipboard(demoOutput, 'demo')}
-                        className="p-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 transition-colors ml-2 flex-shrink-0"
-                        title="Copy text"
+                        className="p-1 rounded-md bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 transition-colors flex items-center gap-1 text-xs font-mono"
+                        title="Copy Bengali text"
                       >
-                        {copiedCmd === 'demo' ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+                        {copiedCmd === 'demo' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                        <span>{copiedCmd === 'demo' ? 'Copied' : 'Copy'}</span>
                       </button>
                     )}
+                  </div>
+                  <div className="w-full p-4 rounded-xl bg-slate-900/50 border border-emerald-500/30 text-emerald-300 font-bengali text-xl sm:text-2xl font-semibold min-h-[120px] shadow-inner break-words whitespace-pre-wrap leading-relaxed">
+                    {demoOutput || <span className="text-slate-600 font-sans text-sm font-normal">Transliterated text will appear here...</span>}
                   </div>
                   <p className="mt-2 text-xs text-slate-400 flex items-center gap-1.5">
                     <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
@@ -725,12 +756,55 @@ export default function App() {
         </div>
       </section>
 
+      {/* Frequently Asked Questions (FAQ) Section for SEO and User Guidance */}
+      <section id="faq" className="py-20 sm:py-24 border-t border-white/5 relative">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-xs sm:text-sm font-bold uppercase tracking-widest text-emerald-400 mb-3">Questions & Answers</h2>
+            <h3 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+              Frequently Asked Questions
+            </h3>
+            <p className="mt-3 text-slate-400 text-base">
+              Everything you need to know about typing Bengali natively on modern Linux.
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            {faqs.map((faq, index) => {
+              const isOpen = openFaq === index;
+              return (
+                <div 
+                  key={index} 
+                  className="glass-card rounded-2xl border border-white/10 overflow-hidden transition-all duration-200"
+                >
+                  <button
+                    onClick={() => setOpenFaq(isOpen ? null : index)}
+                    className="w-full p-5 sm:p-6 text-left flex items-center justify-between gap-4 hover:bg-white/[0.02] transition-colors"
+                  >
+                    <span className="font-bold text-white text-base sm:text-lg flex items-center gap-3">
+                      <HelpCircle className="w-5 h-5 text-emerald-400 flex-shrink-0" />
+                      {faq.q}
+                    </span>
+                    <ChevronDown className={`w-5 h-5 text-slate-400 flex-shrink-0 transition-transform duration-300 ${isOpen ? 'rotate-180 text-emerald-400' : ''}`} />
+                  </button>
+                  {isOpen && (
+                    <div className="px-5 sm:px-6 pb-6 pt-1 text-slate-300 text-sm leading-relaxed border-t border-white/5 font-normal">
+                      {faq.a}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
       {/* Footer */}
       <footer className="border-t border-white/5 py-12 glass-panel">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-emerald-500 to-cyan-500 p-0.5">
-              <img src="./logo.png" alt="BanglaFlow" className="w-full h-full object-cover rounded-[6px]" />
+              <img src="./logo.png" alt="BanglaFlow Logo" width="32" height="32" className="w-full h-full object-cover rounded-[6px]" />
             </div>
             <div>
               <span className="font-bold text-white">BanglaFlow</span>
