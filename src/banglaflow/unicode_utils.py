@@ -184,6 +184,7 @@ def sanitize_bengali_sequence(text: str) -> str:
         # Check modifiers
         elif c in MODIFIERS:
             if not res:
+                res.append(c)
                 continue
             prev = res[-1]
             if prev.isspace() or (prev.isascii() and not prev.isalnum()):
@@ -282,6 +283,8 @@ def validate_bengali(text: str) -> Tuple[bool, str]:
         # 8. Modifiers (Anusvara, Visarga, Candrabindu) position check
         if c in MODIFIERS:
             if i == 0:
+                if length == 1:
+                    continue
                 return False, f"Modifier at string start (index {i}): U+{ord(c):04X}"
             prev = text[i - 1]
             if prev.isspace() or (prev.isascii() and not prev.isalnum()):

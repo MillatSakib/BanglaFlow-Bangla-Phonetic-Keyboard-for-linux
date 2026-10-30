@@ -1726,18 +1726,7 @@
     },
     {
       "find": ":",
-      "replace": "ঃ",
-      "rules": [
-        {
-          "matches": [
-            {
-              "type": "prefix",
-              "scope": "punctuation"
-            }
-          ],
-          "replace": ":"
-        }
-      ]
+      "replace": "ঃ"
     },
     {
       "find": "^`",

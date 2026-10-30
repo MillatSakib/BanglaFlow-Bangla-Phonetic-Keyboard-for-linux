@@ -15,7 +15,7 @@ from typing import Any, Dict
 class BanglaFlowConfig:
     mode: str = "bengali"  # "bengali" or "english"
     map_dari: bool = True  # '.' -> '।'
-    bengali_digits: bool = False  # 0-9 -> ০-৯
+    bengali_digits: bool = True  # 0-9 -> ০-৯
     max_buffer_len: int = 64
     learn_words: bool = False  # Explicit opt-in only
     show_candidate_lookup: bool = True

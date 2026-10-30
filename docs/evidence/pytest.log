@@ -3,17 +3,17 @@ platform linux -- Python 3.14.4, pytest-9.2.0, pluggy-1.7.0
 rootdir: /home/sakib/Desktop/Banglish_Keybord
 configfile: pyproject.toml
 plugins: hypothesis-6.170.13, typeguard-4.4.4
-collected 65 items
+collected 66 items
 
 tests/fakes/test_engine_adapter.py ...                                   [  4%]
 tests/property/test_phonetic_properties.py ..                            [  7%]
-tests/unit/test_candidates.py ........                                   [ 20%]
-tests/unit/test_config.py ....                                           [ 26%]
+tests/unit/test_candidates.py ........                                   [ 19%]
+tests/unit/test_config.py ....                                           [ 25%]
 tests/unit/test_golden.py ...                                            [ 30%]
 tests/unit/test_packaging.py ..                                          [ 33%]
-tests/unit/test_phonetic.py ......                                       [ 43%]
-tests/unit/test_security.py ...                                          [ 47%]
-tests/unit/test_state.py .......................                         [ 83%]
+tests/unit/test_phonetic.py ......                                       [ 42%]
+tests/unit/test_security.py ...                                          [ 46%]
+tests/unit/test_state.py ........................                        [ 83%]
 tests/unit/test_unicode.py ...........                                   [100%]
 
 =============================== warnings summary ===============================
@@ -22,4 +22,4 @@ tests/unit/test_unicode.py ...........                                   [100%]
     value = getattr(proxy, attr)
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
-======================== 65 passed, 1 warning in 11.38s ========================
+======================== 66 passed, 1 warning in 11.03s ========================

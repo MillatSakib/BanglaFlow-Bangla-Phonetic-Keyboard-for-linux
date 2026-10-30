@@ -7,7 +7,7 @@ def test_default_config():
     config = BanglaFlowConfig()
     assert config.mode == "bengali"
     assert config.map_dari is True
-    assert config.bengali_digits is False
+    assert config.bengali_digits is True
     assert config.learn_words is False
     assert config.page_size == 5
 

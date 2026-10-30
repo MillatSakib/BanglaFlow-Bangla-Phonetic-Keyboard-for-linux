@@ -218,12 +218,12 @@ def test_rule_12_focus_out_commits_pending():
     assert commits == ["আমি"]
 
 
-def test_rule_12_reset_discards():
+def test_rule_12_reset_commits_and_clears():
     sm = make_state_machine()
     type_string(sm, "ami")
     actions = sm.handle_reset()
     assert not sm.composing
-    assert not any(isinstance(a, Commit) for a in actions)
+    assert any(isinstance(a, Commit) for a in actions)
 
 
 def test_rule_13_no_preedit_client_fallback():
@@ -324,6 +324,12 @@ def test_backtick_direct_output_when_not_composing():
 
 def test_bisarga_colon_and_hasanta_comma():
     sm = make_state_machine()
+    # Standalone colon produces Bisarga (ঃ)
+    handled, actions = sm.process_key_event(ord(":"), 0, 0, is_release=False)
+    assert handled
+    assert sm.bengali_preview == "ঃ"
+    sm.clear()
+
     # Colon during composition produces Bisarga (দুঃখ)
     type_string(sm, "du:kho")
     assert sm.bengali_preview == "দুঃখ"
@@ -333,6 +339,23 @@ def test_bisarga_colon_and_hasanta_comma():
     # Double comma during composition produces Hasanta (ক্‌)
     type_string(sm, "k,,")
     assert "ক্" in sm.bengali_preview
+
+
+def test_top_row_digits_and_comma():
+    sm = make_state_machine()
+    # 1 -> commits ১
+    h1, a1 = sm.process_key_event(ord("1"), 0, 0, is_release=False)
+    assert h1
+    assert [a.text for a in a1 if isinstance(a, Commit)] == ["১"]
+
+    # , -> not handled, passes through to client
+    h2, a2 = sm.process_key_event(ord(","), 0, 0, is_release=False)
+    assert not h2
+
+    # 2 -> commits ২
+    h3, a3 = sm.process_key_event(ord("2"), 0, 0, is_release=False)
+    assert h3
+    assert [a.text for a in a3 if isinstance(a, Commit)] == ["২"]
 
 
 def test_double_consonant_variants():

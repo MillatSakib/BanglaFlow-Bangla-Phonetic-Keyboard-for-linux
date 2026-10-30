@@ -70,3 +70,4 @@ echo " SNAP BUILD SUCCESSFUL!                   "
 echo " Package: $(basename "$SNAP_FILE")        "
 echo " Size: $(ls -lh "$SNAP_FILE" | awk '{print $5}') "
 echo "=========================================="
+

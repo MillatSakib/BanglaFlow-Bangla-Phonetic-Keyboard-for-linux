@@ -410,16 +410,30 @@ class InputStateMachine:
                 actions.append(Commit(op_char))
                 return True, actions
 
-        # 14. Top-row Number keys 1-9 for candidate selection when lookup is active
-        if self.composing and self.lookup_visible and ord("1") <= keyval <= ord("9"):
-            digit = int(chr(keyval))
-            cand_idx = digit - 1
-            if 0 <= cand_idx < len(self.candidates):
-                chosen = self.candidates[cand_idx]
-                actions.append(Commit(chosen))
+        # 14. Top-row Number keys (0-9)
+        if ord("0") <= keyval <= ord("9"):
+            digit = keyval - ord("0")
+            # If candidate lookup table is open, digits 1-9 select candidate
+            if self.composing and self.lookup_visible and 1 <= digit <= 9:
+                cand_idx = digit - 1
+                if 0 <= cand_idx < len(self.candidates):
+                    chosen = self.candidates[cand_idx]
+                    actions.append(Commit(chosen))
+                    actions.append(HidePreedit())
+                    actions.append(HideLookup())
+                    self.clear()
+                    return True, actions
+
+            out_digit = BN_DIGITS_MAP[digit] if self.config.bengali_digits else str(digit)
+            if self.composing:
+                cand = self._get_selected_candidate()
+                actions.append(Commit(cand + out_digit))
                 actions.append(HidePreedit())
                 actions.append(HideLookup())
                 self.clear()
+                return True, actions
+            else:
+                actions.append(Commit(out_digit))
                 return True, actions
 
         # 15. Backtick (`): if not composing, directly output `
@@ -445,11 +459,11 @@ class InputStateMachine:
         char = chr(keyval)
 
         # 17. Phonetic Composition handling
-        # Alphanumeric characters, backtick, caret (^), and while composing: colon (:) for bisarga, comma (,) for hasanta
+        # Alphabetic characters, backtick, caret (^), colon (:) for bisarga, and while composing: comma (,) for hasanta
         is_composing_char = (
-            char.isalnum()
-            or char in ("`", "^")
-            or (self.composing and char in (":", ","))
+            char.isalpha()
+            or char in ("`", "^", ":")
+            or (self.composing and char == ",")
         )
 
         if is_composing_char:
@@ -465,7 +479,7 @@ class InputStateMachine:
             return True, actions
 
         # 18. Punctuation handling
-        punctuation_marks = {",", ".", "?", "!", ";", ":", "'", '"', "(", ")", "[", "]", "{", "}"}
+        punctuation_marks = {",", ".", "?", "!", ";", "'", '"', "(", ")", "[", "]", "{", "}"}
         if char in punctuation_marks or char == "$":
             # Bengali Dari । mapped from .
             if char == "." and self.config.map_dari:
@@ -546,11 +560,13 @@ class InputStateMachine:
         return actions
 
     def handle_reset(self) -> List[Action]:
-        """Discard state on reset."""
+        """Commit pending word on reset and clear state."""
         actions: List[Action] = []
-        if self.composing:
-            actions.append(HidePreedit())
-            actions.append(HideLookup())
+        if self.composing and self.bengali_preview:
+            cand = self._get_selected_candidate()
+            actions.append(Commit(cand))
+        actions.append(HidePreedit())
+        actions.append(HideLookup())
         self.clear()
         return actions
 
