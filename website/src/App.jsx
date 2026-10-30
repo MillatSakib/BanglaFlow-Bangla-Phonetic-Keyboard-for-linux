@@ -4,68 +4,61 @@ import {
   Keyboard, Sparkles, Cpu, BookOpen, Layers, ArrowRight, Star, 
   Monitor, CheckCircle2, AlertCircle, RefreshCw, ChevronRight, Hash
 } from 'lucide-react';
+import { transliterate } from './phonetic.js';
 
-// Lightweight in-browser Avro phonetic converter for the live sandbox
-const PHONETIC_MAP = {
-  "k": "ক", "kh": "খ", "g": "গ", "gh": "ঘ", "Ng": "ঙ", "ng": "ং",
-  "c": "চ", "ch": "ছ", "j": "জ", "jh": "ঝ", "NG": "ঞ",
-  "T": "ট", "Th": "ঠ", "D": "ড", "Dh": "ঢ", "N": "ণ",
-  "t": "ত", "th": "থ", "d": "দ", "dh": "ধ", "n": "ন",
-  "p": "প", "ph": "ফ", "f": "ফ", "b": "ব", "bh": "ভ", "v": "ভ", "m": "ম",
-  "z": "য", "Z": "য", "r": "র", "l": "ল", "sh": "শ", "S": "ষ", "Sh": "ষ",
-  "s": "স", "h": "হ", "R": "ড়", "Rh": "ঢ়", "y": "য়", "Y": "য়",
-  "a": "া", "aa": "া", "i": "ি", "ee": "ী", "I": "ী", "u": "ু", "oo": "ূ", "U": "ূ",
-  "e": "ে", "o": "ো", "OI": "ৈ", "OU": "ৌ",
-  ":": "ঃ", "^": "ঁ", "..": "।", ".": "।", ",,": "্", "$": "৳"
-};
+const GITHUB_REPO = "MillatSakib/BanglaFlow-Bangla-Phonetic-Keyboard-for-linux";
 
-const SAMPLE_WORDS = {
-  "ami": "আমি",
-  "bangla": "বাংলা",
-  "banglaflow": "বাংলাফ্লো",
-  "somossa": "সমস্যা",
-  "dhonnobad": "ধন্যবাদ",
-  "du:kho": "দুঃখ",
-  "bhasha": "ভাষা",
-  "shadhinota": "স্বাধীনতা",
-  "kichu": "কিছু",
-  "tumi": "তুমি",
-  "desh": "দেশ",
-  "onek": "অনেক"
-};
-
-function transliterateSample(input) {
-  if (!input) return "";
-  const lower = input.toLowerCase().trim();
-  if (SAMPLE_WORDS[lower]) return SAMPLE_WORDS[lower];
-  
-  // Basic transliteration logic for interactive sandbox
-  let res = "";
-  let i = 0;
-  while (i < input.length) {
-    if (i + 2 <= input.length && PHONETIC_MAP[input.slice(i, i + 2)]) {
-      res += PHONETIC_MAP[input.slice(i, i + 2)];
-      i += 2;
-    } else if (PHONETIC_MAP[input[i]]) {
-      res += PHONETIC_MAP[input[i]];
-      i++;
-    } else {
-      res += input[i];
-      i++;
-    }
-  }
-  return res;
-}
+const PRESET_PHRASES = [
+  "amar sonar bangla ami",
+  "ami bangla valobashi",
+  "tumi kemon acho?",
+  "banglaflow",
+  "dhonnobad",
+  "du:kho"
+];
 
 export default function App() {
   const [copiedCmd, setCopiedCmd] = useState(null);
-  const [demoInput, setDemoInput] = useState("banglaflow");
-  const [demoOutput, setDemoOutput] = useState("বাংলাফ্লো");
+  const [demoInput, setDemoInput] = useState("amar sonar bangla ami");
+  const [demoOutput, setDemoOutput] = useState("");
   const [installTab, setInstallTab] = useState("deb");
   const [cheatTab, setCheatTab] = useState("vowels");
 
+  // Dynamic GitHub Release State
+  const [releaseInfo, setReleaseInfo] = useState({
+    version: "v1.0.1",
+    debFileName: "banglaflow_1.0.1.deb",
+    debUrl: `https://github.com/${GITHUB_REPO}/releases/download/v1.0.1/banglaflow_1.0.1.deb`,
+    releasePageUrl: `https://github.com/${GITHUB_REPO}/releases/latest`
+  });
+
+  // Fetch latest release dynamically from GitHub API
   useEffect(() => {
-    setDemoOutput(transliterateSample(demoInput));
+    async function fetchLatestRelease() {
+      try {
+        const res = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/releases/latest`);
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data && data.tag_name) {
+          const debAsset = data.assets && data.assets.find(a => a.name.endsWith('.deb'));
+          const cleanVer = data.tag_name.replace(/^v/, '');
+          setReleaseInfo({
+            version: data.tag_name,
+            debFileName: debAsset ? debAsset.name : `banglaflow_${cleanVer}.deb`,
+            debUrl: debAsset ? debAsset.browser_download_url : `https://github.com/${GITHUB_REPO}/releases/download/${data.tag_name}/banglaflow_${cleanVer}.deb`,
+            releasePageUrl: data.html_url || `https://github.com/${GITHUB_REPO}/releases/latest`
+          });
+        }
+      } catch (e) {
+        console.warn("Could not fetch latest release from GitHub API, using fallback:", e);
+      }
+    }
+    fetchLatestRelease();
+  }, []);
+
+  // Live transliteration update
+  useEffect(() => {
+    setDemoOutput(transliterate(demoInput));
   }, [demoInput]);
 
   const copyToClipboard = (text, id) => {
@@ -91,7 +84,9 @@ export default function App() {
             <div>
               <div className="flex items-center gap-2">
                 <span className="font-extrabold text-xl tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent">BanglaFlow</span>
-                <span className="px-2 py-0.5 text-xs font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-full">v1.0.1</span>
+                <span className="px-2 py-0.5 text-xs font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-full">
+                  {releaseInfo.version}
+                </span>
               </div>
               <p className="text-[11px] text-slate-400">Native Bengali Keyboard for Linux</p>
             </div>
@@ -107,7 +102,7 @@ export default function App() {
 
           <div className="flex items-center gap-3">
             <a 
-              href="https://github.com/MillatSakib/BanglaFlow-Bangla-Phonetic-Keyboard-for-linux" 
+              href={`https://github.com/${GITHUB_REPO}`} 
               target="_blank" 
               rel="noreferrer"
               className="p-2.5 rounded-xl glass-card text-slate-300 hover:text-white hover:border-emerald-500/40 transition-all flex items-center gap-2 text-sm"
@@ -117,11 +112,13 @@ export default function App() {
               <span className="hidden sm:inline font-mono">GitHub</span>
             </a>
             <a 
-              href="#install"
+              href={releaseInfo.debUrl}
+              download
               className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-bold text-sm shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/30 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-2"
+              title={`Download latest Debian package (${releaseInfo.version})`}
             >
               <Download className="w-4 h-4" />
-              <span>Get v1.0.1</span>
+              <span>Get {releaseInfo.version}</span>
             </a>
           </div>
         </div>
@@ -150,11 +147,12 @@ export default function App() {
             {/* CTAs */}
             <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
               <a 
-                href="#install"
+                href={releaseInfo.debUrl}
+                download
                 className="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-extrabold text-base shadow-xl shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:-translate-y-0.5 transition-all flex items-center justify-center gap-3"
               >
                 <Download className="w-5 h-5" />
-                <span>Download .deb Package</span>
+                <span>Download .deb ({releaseInfo.version})</span>
               </a>
 
               <a 
@@ -212,7 +210,7 @@ export default function App() {
                       type="text" 
                       value={demoInput}
                       onChange={(e) => setDemoInput(e.target.value)}
-                      placeholder="Type e.g. ami bangla valobashi..."
+                      placeholder="Type e.g. amar sonar bangla ami..."
                       className="w-full px-4 py-3.5 rounded-xl bg-slate-900/90 border border-slate-700/80 text-white font-mono text-base focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all placeholder:text-slate-600"
                     />
                     {demoInput && (
@@ -227,14 +225,14 @@ export default function App() {
 
                   {/* Preset quick test tags */}
                   <div className="mt-3 flex flex-wrap gap-1.5 items-center">
-                    <span className="text-[11px] text-slate-500">Try quick words:</span>
-                    {Object.keys(SAMPLE_WORDS).slice(0, 6).map((word) => (
+                    <span className="text-[11px] text-slate-500">Try quick phrases:</span>
+                    {PRESET_PHRASES.map((phrase) => (
                       <button
-                        key={word}
-                        onClick={() => setDemoInput(word)}
+                        key={phrase}
+                        onClick={() => setDemoInput(phrase)}
                         className="text-xs px-2 py-0.5 rounded bg-slate-800/80 hover:bg-emerald-500/20 hover:text-emerald-300 text-slate-400 border border-slate-700/50 transition-colors font-mono"
                       >
-                        {word}
+                        {phrase}
                       </button>
                     ))}
                   </div>
@@ -249,7 +247,7 @@ export default function App() {
                     {demoOutput && (
                       <button 
                         onClick={() => copyToClipboard(demoOutput, 'demo')}
-                        className="p-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 transition-colors"
+                        className="p-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 transition-colors ml-2 flex-shrink-0"
                         title="Copy text"
                       >
                         {copiedCmd === 'demo' ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
@@ -365,7 +363,7 @@ export default function App() {
               <thead className="bg-slate-900/90 text-slate-300 font-semibold border-b border-white/10">
                 <tr>
                   <th className="py-4 px-6">Feature</th>
-                  <th className="py-4 px-6 text-emerald-400 font-bold text-base">BanglaFlow (v1.0.1)</th>
+                  <th className="py-4 px-6 text-emerald-400 font-bold text-base">BanglaFlow ({releaseInfo.version})</th>
                   <th className="py-4 px-6 text-slate-400">Legacy IBus-Avro</th>
                   <th className="py-4 px-6 text-slate-400">Generic OpenBhasha</th>
                 </tr>
@@ -439,7 +437,7 @@ export default function App() {
           </div>
 
           <div className="flex justify-center mb-8">
-            <div className="glass-panel p-1.5 rounded-xl flex gap-1 text-xs sm:text-sm font-medium">
+            <div className="glass-panel p-1.5 rounded-xl flex gap-1 text-xs sm:text-sm font-medium overflow-x-auto max-w-full">
               {[
                 { id: "vowels", label: "Vowels (Shoroborno)" },
                 { id: "consonants", label: "Consonants (Benjonborno)" },
@@ -449,7 +447,7 @@ export default function App() {
                 <button
                   key={tab.id}
                   onClick={() => setCheatTab(tab.id)}
-                  className={`px-3.5 py-2 rounded-lg transition-all ${
+                  className={`px-3.5 py-2 rounded-lg transition-all whitespace-nowrap ${
                     cheatTab === tab.id 
                       ? "bg-emerald-500 text-slate-950 font-bold shadow-md shadow-emerald-500/20" 
                       : "text-slate-400 hover:text-white"
@@ -510,7 +508,7 @@ export default function App() {
                   { key: ",, (double comma)", bn: "্ (Hasanta)", desc: "Type k,, -> ক্‌" },
                   { key: ". (period)", bn: "। (Dari)", desc: "Type . -> ।" },
                   { key: "$ (dollar)", bn: "৳ (Taka)", desc: "Type $ -> ৳" },
-                  { key: "^ (caret)", bn: "ঁ (Chandrabindu)", desc: "Type c^ad -> চাঁদ" },
+                  { key: "^ (caret)", bn: "ঁ (Chandrabindu)", desc: "Type ca^d -> চাঁদ" },
                   { key: "` (backtick)", bn: "Literal `", desc: "Break conjunct or code" }
                 ].map((item, idx) => (
                   <div key={idx} className="p-4 rounded-xl bg-slate-900/80 border border-slate-800">
@@ -556,10 +554,10 @@ export default function App() {
 
           {/* Installation Method Tabs */}
           <div className="flex justify-center mb-8">
-            <div className="glass-panel p-1.5 rounded-xl flex gap-1 text-sm font-medium">
+            <div className="glass-panel p-1.5 rounded-xl flex gap-1 text-sm font-medium overflow-x-auto max-w-full">
               <button
                 onClick={() => setInstallTab("deb")}
-                className={`px-5 py-2.5 rounded-lg flex items-center gap-2 transition-all ${
+                className={`px-5 py-2.5 rounded-lg flex items-center gap-2 transition-all whitespace-nowrap ${
                   installTab === "deb"
                     ? "bg-emerald-500 text-slate-950 font-bold shadow-md shadow-emerald-500/20"
                     : "text-slate-400 hover:text-white"
@@ -571,7 +569,7 @@ export default function App() {
               <button
                 id="snap-install"
                 onClick={() => setInstallTab("snap")}
-                className={`px-5 py-2.5 rounded-lg flex items-center gap-2 transition-all ${
+                className={`px-5 py-2.5 rounded-lg flex items-center gap-2 transition-all whitespace-nowrap ${
                   installTab === "snap"
                     ? "bg-cyan-500 text-slate-950 font-bold shadow-md shadow-cyan-500/20"
                     : "text-slate-400 hover:text-white"
@@ -582,7 +580,7 @@ export default function App() {
               </button>
               <button
                 onClick={() => setInstallTab("source")}
-                className={`px-5 py-2.5 rounded-lg flex items-center gap-2 transition-all ${
+                className={`px-5 py-2.5 rounded-lg flex items-center gap-2 transition-all whitespace-nowrap ${
                   installTab === "source"
                     ? "bg-teal-500 text-slate-950 font-bold shadow-md shadow-teal-500/20"
                     : "text-slate-400 hover:text-white"
@@ -597,28 +595,34 @@ export default function App() {
           {/* Tab 1: DEB */}
           {installTab === "deb" && (
             <div className="glass-panel rounded-2xl p-6 sm:p-8 border border-white/10 shadow-xl space-y-6">
-              <div className="flex items-center justify-between pb-4 border-b border-white/5">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-white/5 gap-4">
                 <div>
-                  <h3 className="text-lg font-bold text-white">Recommended for Ubuntu / Debian</h3>
-                  <p className="text-xs text-slate-400">One-click installation for Ubuntu 24.04 / 26.04 LTS.</p>
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-lg font-bold text-white">Recommended for Ubuntu / Debian</h3>
+                    <span className="px-2 py-0.5 text-[11px] font-semibold bg-emerald-500/20 text-emerald-400 rounded-full border border-emerald-500/30">
+                      {releaseInfo.version}
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-400 mt-0.5">One-click installation for Ubuntu 24.04 / 26.04 LTS.</p>
                 </div>
                 <a 
-                  href="https://github.com/MillatSakib/BanglaFlow-Bangla-Phonetic-Keyboard-for-linux/releases/download/v1.0.1/banglaflow_1.0.1-1_all.deb" 
-                  className="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs flex items-center gap-1.5 transition-colors shadow"
+                  href={releaseInfo.debUrl}
+                  download
+                  className="px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs flex items-center justify-center gap-1.5 transition-colors shadow-lg shadow-emerald-500/20 self-start sm:self-auto"
                 >
                   <Download className="w-3.5 h-3.5" />
-                  <span>Download .deb</span>
+                  <span>Download {releaseInfo.debFileName}</span>
                 </a>
               </div>
 
               <div>
-                <span className="text-xs font-semibold text-slate-400 block mb-2">Step 1: Install the package</span>
+                <span className="text-xs font-semibold text-slate-400 block mb-2">Step 1: Install the downloaded package</span>
                 <div className="relative">
                   <pre className="p-4 rounded-xl bg-slate-900 border border-slate-800 text-emerald-400 font-mono text-sm overflow-x-auto">
-                    <code>sudo dpkg -i banglaflow_1.0.1-1_all.deb{'\n'}sudo apt-get install -f</code>
+                    <code>sudo dpkg -i {releaseInfo.debFileName}{'\n'}sudo apt-get install -f</code>
                   </pre>
                   <button 
-                    onClick={() => copyToClipboard('sudo dpkg -i banglaflow_1.0.1-1_all.deb\nsudo apt-get install -f', 'deb-cmd')}
+                    onClick={() => copyToClipboard(`sudo dpkg -i ${releaseInfo.debFileName}\nsudo apt-get install -f`, 'deb-cmd')}
                     className="absolute right-3 top-3 p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors"
                     title="Copy command"
                   >
@@ -655,25 +659,45 @@ export default function App() {
           {installTab === "snap" && (
             <div className="glass-panel rounded-2xl p-6 sm:p-8 border border-white/10 shadow-xl space-y-6">
               <div>
-                <h3 className="text-lg font-bold text-white mb-1">Install from Canonical Snap</h3>
-                <p className="text-xs text-slate-400">Available across all snap-enabled Linux distributions.</p>
+                <div className="flex items-center gap-2">
+                  <h3 className="text-lg font-bold text-white">Install from Canonical Snap Store</h3>
+                  <span className="px-2 py-0.5 text-[11px] font-semibold bg-cyan-500/20 text-cyan-400 rounded-full border border-cyan-500/30">
+                    Universal Snap
+                  </span>
+                </div>
+                <p className="text-xs text-slate-400 mt-0.5">Compatible across Ubuntu, Debian, Fedora, Arch, and all snap-enabled distributions.</p>
               </div>
 
-              <div className="relative">
-                <pre className="p-4 rounded-xl bg-slate-900 border border-slate-800 text-cyan-400 font-mono text-sm overflow-x-auto">
-                  <code>sudo snap install --classic banglaflow</code>
-                </pre>
-                <button 
-                  onClick={() => copyToClipboard('sudo snap install --classic banglaflow', 'snap-cmd')}
-                  className="absolute right-3 top-3 p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors"
-                >
-                  {copiedCmd === 'snap-cmd' ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
-                </button>
+              <div>
+                <span className="text-xs font-semibold text-slate-400 block mb-2">Terminal Command (Install & Restart IBus):</span>
+                <div className="relative">
+                  <pre className="p-4 rounded-xl bg-slate-900 border border-slate-800 text-cyan-400 font-mono text-sm overflow-x-auto">
+                    <code>sudo snap install --classic banglaflow{'\n'}ibus restart</code>
+                  </pre>
+                  <button 
+                    onClick={() => copyToClipboard('sudo snap install --classic banglaflow\nibus restart', 'snap-cmd')}
+                    className="absolute right-3 top-3 p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors"
+                    title="Copy snap installation & restart command"
+                  >
+                    {copiedCmd === 'snap-cmd' ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+                  </button>
+                </div>
               </div>
 
-              <p className="text-xs text-slate-400">
-                After installation, run <code className="text-emerald-400 font-mono">ibus restart</code> to load the BanglaFlow engine into your desktop session.
-              </p>
+              <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 space-y-2 text-xs text-slate-300">
+                <div className="flex items-start gap-2">
+                  <span className="w-5 h-5 rounded-full bg-cyan-500/20 text-cyan-300 font-bold flex items-center justify-center flex-shrink-0 text-[11px]">1</span>
+                  <p>Installs the isolated, auto-updating <strong>banglaflow</strong> snap package with classic system integration.</p>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="w-5 h-5 rounded-full bg-cyan-500/20 text-cyan-300 font-bold flex items-center justify-center flex-shrink-0 text-[11px]">2</span>
+                  <p>Running <code className="text-emerald-400 font-mono bg-slate-800 px-1.5 py-0.5 rounded">ibus restart</code> immediately registers the new engine into your desktop session without a reboot.</p>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="w-5 h-5 rounded-full bg-cyan-500/20 text-cyan-300 font-bold flex items-center justify-center flex-shrink-0 text-[11px]">3</span>
+                  <p>Activate via <strong>Settings</strong> → <strong>Keyboard</strong> → <strong>Add (+)</strong> → <strong>Bengali (BanglaFlow)</strong>.</p>
+                </div>
+              </div>
             </div>
           )}
 
@@ -687,10 +711,10 @@ export default function App() {
 
               <div className="relative">
                 <pre className="p-4 rounded-xl bg-slate-900 border border-slate-800 text-teal-400 font-mono text-sm overflow-x-auto">
-                  <code>git clone https://github.com/MillatSakib/BanglaFlow-Bangla-Phonetic-Keyboard-for-linux.git{'\n'}cd BanglaFlow-Bangla-Phonetic-Keyboard-for-linux{'\n'}bash scripts/build-deb.sh{'\n'}sudo dpkg -i banglaflow.deb{'\n'}ibus restart</code>
+                  <code>git clone https://github.com/{GITHUB_REPO}.git{'\n'}cd BanglaFlow-Bangla-Phonetic-Keyboard-for-linux{'\n'}bash scripts/build-deb.sh{'\n'}sudo dpkg -i banglaflow.deb{'\n'}ibus restart</code>
                 </pre>
                 <button 
-                  onClick={() => copyToClipboard('git clone https://github.com/MillatSakib/BanglaFlow-Bangla-Phonetic-Keyboard-for-linux.git\ncd BanglaFlow-Bangla-Phonetic-Keyboard-for-linux\nbash scripts/build-deb.sh\nsudo dpkg -i banglaflow.deb\nibus restart', 'source-cmd')}
+                  onClick={() => copyToClipboard(`git clone https://github.com/${GITHUB_REPO}.git\ncd BanglaFlow-Bangla-Phonetic-Keyboard-for-linux\nbash scripts/build-deb.sh\nsudo dpkg -i banglaflow.deb\nibus restart`, 'source-cmd')}
                   className="absolute right-3 top-3 p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors"
                 >
                   {copiedCmd === 'source-cmd' ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
@@ -718,7 +742,7 @@ export default function App() {
             <span>Licensed under <strong className="text-slate-300">GNU GPL-3.0</strong></span>
             <span>•</span>
             <a 
-              href="https://github.com/MillatSakib/BanglaFlow-Bangla-Phonetic-Keyboard-for-linux" 
+              href={`https://github.com/${GITHUB_REPO}`} 
               target="_blank" 
               rel="noreferrer" 
               className="text-slate-300 hover:text-white transition-colors flex items-center gap-1"
