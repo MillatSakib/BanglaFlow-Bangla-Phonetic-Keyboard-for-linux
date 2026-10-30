@@ -22,4 +22,4 @@ tests/unit/test_unicode.py ...........                                   [100%]
     value = getattr(proxy, attr)
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
-======================== 66 passed, 1 warning in 15.77s ========================
+======================== 66 passed, 1 warning in 12.47s ========================

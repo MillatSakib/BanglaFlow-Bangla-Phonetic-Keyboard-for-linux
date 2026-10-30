@@ -201,12 +201,21 @@ def test_rule_10_and_11_candidate_navigation_and_selection():
     assert handled
     assert sm.selected_index == 0
 
-    # Number key '1' selects first candidate (primary phonetic transliteration)
-    handled, actions = sm.process_key_event(ord("1"), 0, 0, is_release=False)
+    # Space commits selected candidate
+    handled, actions = sm.process_key_event(KEY_SPACE, 0, 0, is_release=False)
     assert handled
     assert not sm.composing
     commits = [a.text for a in actions if isinstance(a, Commit)]
-    assert commits == ["ভাশা"]
+    assert commits == ["ভাশা "]
+
+    # Number keys type digits directly rather than hijacking candidate selection
+    sm2 = make_state_machine()
+    type_string(sm2, "bhasha")
+    handled, actions = sm2.process_key_event(ord("1"), 0, 0, is_release=False)
+    assert handled
+    assert not sm2.composing
+    commits = [a.text for a in actions if isinstance(a, Commit)]
+    assert commits == ["ভাশা১"]
 
 
 def test_rule_12_focus_out_commits_pending():

@@ -89,14 +89,6 @@ class BanglaFlowEngine(BaseEngine):
 
             elif isinstance(action, HidePreedit):
                 logger.debug("Action: HidePreedit")
-                if HAS_GI and hasattr(engine, "update_preedit_text"):
-                    engine.update_preedit_text(
-                        IBus.Text.new_from_string(""),
-                        0,
-                        False,
-                    )
-                elif hasattr(engine, "update_preedit_text"):
-                    engine.update_preedit_text("", 0, False)
                 if hasattr(engine, "hide_preedit_text"):
                     engine.hide_preedit_text()
 

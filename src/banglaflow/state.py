@@ -373,17 +373,6 @@ class InputStateMachine:
         # 12. Keypad Numbers (0-9: KEY_KP_0 - KEY_KP_9)
         if KEY_KP_0 <= keyval <= KEY_KP_9:
             digit = keyval - KEY_KP_0
-            # If candidate lookup table is open, digits 1-9 select candidate
-            if self.composing and self.lookup_visible and 1 <= digit <= 9:
-                cand_idx = digit - 1
-                if 0 <= cand_idx < len(self.candidates):
-                    chosen = self.candidates[cand_idx]
-                    actions.append(Commit(chosen))
-                    actions.append(HidePreedit())
-                    actions.append(HideLookup())
-                    self.clear()
-                    return True, actions
-
             out_digit = BN_DIGITS_MAP[digit] if self.config.bengali_digits else str(digit)
             if self.composing:
                 cand = self._get_selected_candidate()
@@ -413,17 +402,6 @@ class InputStateMachine:
         # 14. Top-row Number keys (0-9)
         if ord("0") <= keyval <= ord("9"):
             digit = keyval - ord("0")
-            # If candidate lookup table is open, digits 1-9 select candidate
-            if self.composing and self.lookup_visible and 1 <= digit <= 9:
-                cand_idx = digit - 1
-                if 0 <= cand_idx < len(self.candidates):
-                    chosen = self.candidates[cand_idx]
-                    actions.append(Commit(chosen))
-                    actions.append(HidePreedit())
-                    actions.append(HideLookup())
-                    self.clear()
-                    return True, actions
-
             out_digit = BN_DIGITS_MAP[digit] if self.config.bengali_digits else str(digit)
             if self.composing:
                 cand = self._get_selected_candidate()
