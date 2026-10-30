@@ -765,15 +765,15 @@ export default function App() {
               </div>
 
               <div>
-                <span className="text-xs font-semibold text-slate-400 block mb-2">Step 1: Install the downloaded package</span>
+                <span className="text-xs font-semibold text-slate-400 block mb-2">Step 1: Download & Install via Terminal (Auto-fetches latest release)</span>
                 <div className="relative">
                   <pre className="p-4 rounded-xl bg-slate-900 border border-slate-800 text-emerald-400 font-mono text-sm overflow-x-auto">
-                    <code>sudo dpkg -i {releaseInfo.debFileName}{'\n'}sudo apt-get install -f</code>
+                    <code>cd /tmp{'\n'}curl -sLO {releaseInfo.debUrl}{'\n'}sudo dpkg -i {releaseInfo.debFileName}{'\n'}sudo apt-get install -f</code>
                   </pre>
                   <button 
-                    onClick={() => copyToClipboard(`sudo dpkg -i ${releaseInfo.debFileName}\nsudo apt-get install -f`, 'deb-cmd')}
+                    onClick={() => copyToClipboard(`cd /tmp\ncurl -sLO ${releaseInfo.debUrl}\nsudo dpkg -i ${releaseInfo.debFileName}\nsudo apt-get install -f`, 'deb-cmd')}
                     className="absolute right-3 top-3 p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors"
-                    title="Copy command"
+                    title="Copy auto-download & installation command"
                   >
                     {copiedCmd === 'deb-cmd' ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
                   </button>
