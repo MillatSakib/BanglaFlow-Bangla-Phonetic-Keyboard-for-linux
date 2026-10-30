@@ -36,23 +36,67 @@ BanglaFlow is a native, lightweight, and system-wide Bengali phonetic input meth
 
 ## Installation
 
-### From Debian Package (.deb)
+### 1. Via Ubuntu PPA (Recommended for Ubuntu & Debian)
 
-1. Download or build the `.deb` package:
-   ```bash
-   sudo dpkg -i banglaflow.deb
-   sudo apt-get install -f
-   ```
+The easiest and official way to install and receive automatic updates on Ubuntu:
 
-2. Restart the IBus daemon:
-   ```bash
-   ibus restart
-   ```
+```bash
+# Add official BanglaFlow PPA
+sudo add-apt-repository ppa:kovenceit/banglaflow
+sudo apt update
 
-3. Enable in GNOME:
-   - Go to **Settings** → **Keyboard** → **Input Sources**.
-   - Click **Add (+)** → **...** (more) → search **Bengali**.
-   - Select **BanglaFlow** and click **Add**.
+# Install BanglaFlow and restart IBus
+sudo apt install banglaflow
+ibus restart
+```
+
+---
+
+### 2. Via Canonical Snap Store (Universal Linux)
+
+Available across all Snap-supported distributions (Ubuntu, Debian, Fedora, Arch, Manjaro):
+
+```bash
+sudo snap install --classic banglaflow
+ibus restart
+```
+
+---
+
+### 3. From Debian Package (.deb)
+
+Download the latest `.deb` release directly from [GitHub Releases](https://github.com/MillatSakib/BanglaFlow-Bangla-Phonetic-Keyboard-for-linux/releases/latest) or install locally:
+
+```bash
+sudo dpkg -i banglaflow_1.0.1.deb
+sudo apt-get install -f
+ibus restart
+```
+
+---
+
+### 4. Build from Source
+
+Compile and install directly from the git repository:
+
+```bash
+git clone https://github.com/MillatSakib/BanglaFlow-Bangla-Phonetic-Keyboard-for-linux.git
+cd BanglaFlow-Bangla-Phonetic-Keyboard-for-linux
+bash scripts/build-deb.sh
+sudo dpkg -i banglaflow.deb
+ibus restart
+```
+
+---
+
+### Enable in GNOME Desktop
+
+After installing via any of the methods above:
+
+1. Open **Settings** → **Keyboard** → **Input Sources**.
+2. Click **Add (+)** → Select **Bengali**.
+3. Choose **BanglaFlow** (marked with the `bn` indicator).
+4. Switch to Bengali typing using <kbd>Super</kbd> + <kbd>Space</kbd> or <kbd>Ctrl</kbd> + <kbd>Space</kbd>.
 
 ---
 

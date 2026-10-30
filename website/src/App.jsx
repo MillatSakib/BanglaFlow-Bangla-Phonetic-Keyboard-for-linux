@@ -21,7 +21,7 @@ export default function App() {
   const [copiedCmd, setCopiedCmd] = useState(null);
   const [demoInput, setDemoInput] = useState("amar sonar bangla ami");
   const [demoOutput, setDemoOutput] = useState("");
-  const [installTab, setInstallTab] = useState("deb");
+  const [installTab, setInstallTab] = useState("ppa");
   const [cheatTab, setCheatTab] = useState("vowels");
   const [openFaq, setOpenFaq] = useState(0);
 
@@ -172,20 +172,30 @@ export default function App() {
             {/* CTAs */}
             <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
               <a 
-                href={releaseInfo.debUrl}
-                download
+                href="#install"
+                onClick={() => setInstallTab("ppa")}
                 className="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-extrabold text-base shadow-xl shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:-translate-y-0.5 transition-all flex items-center justify-center gap-3"
               >
-                <Download className="w-5 h-5" />
+                <Terminal className="w-5 h-5" />
+                <span>Install via APT (PPA)</span>
+              </a>
+
+              <a 
+                href={releaseInfo.debUrl}
+                download
+                className="w-full sm:w-auto px-7 py-4 rounded-xl glass-panel hover:bg-slate-800/80 text-white font-semibold text-base border border-white/10 hover:border-emerald-500/40 transition-all flex items-center justify-center gap-2.5"
+              >
+                <Download className="w-5 h-5 text-emerald-400" />
                 <span>Download .deb ({releaseInfo.version})</span>
               </a>
 
               <a 
-                href="#snap-install"
-                className="w-full sm:w-auto px-7 py-4 rounded-xl glass-panel hover:bg-slate-800/80 text-white font-semibold text-base border border-white/10 hover:border-emerald-500/40 transition-all flex items-center justify-center gap-2.5"
+                href="#install"
+                onClick={() => setInstallTab("snap")}
+                className="w-full sm:w-auto px-7 py-4 rounded-xl glass-panel hover:bg-slate-800/80 text-white font-semibold text-base border border-white/10 hover:border-cyan-500/40 transition-all flex items-center justify-center gap-2.5"
               >
                 <Terminal className="w-5 h-5 text-cyan-400" />
-                <span>Install via Snap</span>
+                <span>Snap Store</span>
               </a>
             </div>
 
@@ -587,20 +597,23 @@ export default function App() {
           <div className="flex justify-center mb-8">
             <div className="glass-panel p-1.5 rounded-xl flex gap-1 text-sm font-medium overflow-x-auto max-w-full">
               <button
-                onClick={() => setInstallTab("deb")}
-                className={`px-5 py-2.5 rounded-lg flex items-center gap-2 transition-all whitespace-nowrap ${
-                  installTab === "deb"
+                onClick={() => setInstallTab("ppa")}
+                className={`px-4 sm:px-5 py-2.5 rounded-lg flex items-center gap-2 transition-all whitespace-nowrap ${
+                  installTab === "ppa"
                     ? "bg-emerald-500 text-slate-950 font-bold shadow-md shadow-emerald-500/20"
                     : "text-slate-400 hover:text-white"
                 }`}
               >
-                <Download className="w-4 h-4" />
-                <span>Debian Package (.deb)</span>
+                <Terminal className="w-4 h-4" />
+                <span>Ubuntu PPA (APT)</span>
+                <span className="text-[10px] font-extrabold uppercase px-1.5 py-0.5 rounded bg-emerald-400/30 text-emerald-950 hidden sm:inline">
+                  Recommended
+                </span>
               </button>
               <button
                 id="snap-install"
                 onClick={() => setInstallTab("snap")}
-                className={`px-5 py-2.5 rounded-lg flex items-center gap-2 transition-all whitespace-nowrap ${
+                className={`px-4 sm:px-5 py-2.5 rounded-lg flex items-center gap-2 transition-all whitespace-nowrap ${
                   installTab === "snap"
                     ? "bg-cyan-500 text-slate-950 font-bold shadow-md shadow-cyan-500/20"
                     : "text-slate-400 hover:text-white"
@@ -610,8 +623,19 @@ export default function App() {
                 <span>Snap Store</span>
               </button>
               <button
+                onClick={() => setInstallTab("deb")}
+                className={`px-4 sm:px-5 py-2.5 rounded-lg flex items-center gap-2 transition-all whitespace-nowrap ${
+                  installTab === "deb"
+                    ? "bg-emerald-500 text-slate-950 font-bold shadow-md shadow-emerald-500/20"
+                    : "text-slate-400 hover:text-white"
+                }`}
+              >
+                <Download className="w-4 h-4" />
+                <span>Debian (.deb)</span>
+              </button>
+              <button
                 onClick={() => setInstallTab("source")}
-                className={`px-5 py-2.5 rounded-lg flex items-center gap-2 transition-all whitespace-nowrap ${
+                className={`px-4 sm:px-5 py-2.5 rounded-lg flex items-center gap-2 transition-all whitespace-nowrap ${
                   installTab === "source"
                     ? "bg-teal-500 text-slate-950 font-bold shadow-md shadow-teal-500/20"
                     : "text-slate-400 hover:text-white"
@@ -623,18 +647,112 @@ export default function App() {
             </div>
           </div>
 
-          {/* Tab 1: DEB */}
+          {/* Tab 1: PPA */}
+          {installTab === "ppa" && (
+            <div className="glass-panel rounded-2xl p-6 sm:p-8 border border-white/10 shadow-xl space-y-6">
+              <div>
+                <div className="flex items-center gap-2">
+                  <h3 className="text-lg font-bold text-white">Official Ubuntu PPA (APT)</h3>
+                  <span className="px-2 py-0.5 text-[11px] font-semibold bg-emerald-500/20 text-emerald-400 rounded-full border border-emerald-500/30">
+                    Recommended
+                  </span>
+                </div>
+                <p className="text-xs text-slate-400 mt-0.5">
+                  Native APT package repository with automatic system updates for Ubuntu 24.04, 26.04 & Debian derivatives.
+                </p>
+              </div>
+
+              <div>
+                <span className="text-xs font-semibold text-slate-400 block mb-2">Run in Terminal:</span>
+                <div className="relative">
+                  <pre className="p-4 rounded-xl bg-slate-900 border border-slate-800 text-emerald-400 font-mono text-sm overflow-x-auto">
+                    <code>sudo add-apt-repository ppa:kovenceit/banglaflow{'\n'}sudo apt update{'\n'}sudo apt install banglaflow{'\n'}ibus restart</code>
+                  </pre>
+                  <button 
+                    onClick={() => copyToClipboard('sudo add-apt-repository ppa:kovenceit/banglaflow\nsudo apt update\nsudo apt install banglaflow\nibus restart', 'ppa-cmd')}
+                    className="absolute right-3 top-3 p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors"
+                    title="Copy PPA installation commands"
+                  >
+                    {copiedCmd === 'ppa-cmd' ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
+
+              <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 space-y-2 text-xs text-slate-300">
+                <div className="flex items-start gap-2">
+                  <span className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 font-bold flex items-center justify-center flex-shrink-0 text-[11px]">1</span>
+                  <p>Adds the signed official PPA from Launchpad and refreshes package lists.</p>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 font-bold flex items-center justify-center flex-shrink-0 text-[11px]">2</span>
+                  <p>Installs <code className="text-emerald-400 font-mono bg-slate-800 px-1.5 py-0.5 rounded">banglaflow</code> directly via APT and reloads the IBus daemon.</p>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 font-bold flex items-center justify-center flex-shrink-0 text-[11px]">3</span>
+                  <p>Go to <strong>Settings</strong> → <strong>Keyboard</strong> → <strong>Input Sources</strong> → Add <strong>Bengali (BanglaFlow)</strong>.</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Tab 2: SNAP */}
+          {installTab === "snap" && (
+            <div className="glass-panel rounded-2xl p-6 sm:p-8 border border-white/10 shadow-xl space-y-6">
+              <div>
+                <div className="flex items-center gap-2">
+                  <h3 className="text-lg font-bold text-white">Install from Canonical Snap Store</h3>
+                  <span className="px-2 py-0.5 text-[11px] font-semibold bg-cyan-500/20 text-cyan-400 rounded-full border border-cyan-500/30">
+                    Universal Snap
+                  </span>
+                </div>
+                <p className="text-xs text-slate-400 mt-0.5">Compatible across Ubuntu, Debian, Fedora, Arch, and all snap-enabled distributions.</p>
+              </div>
+
+              <div>
+                <span className="text-xs font-semibold text-slate-400 block mb-2">Terminal Command (Install & Restart IBus):</span>
+                <div className="relative">
+                  <pre className="p-4 rounded-xl bg-slate-900 border border-slate-800 text-cyan-400 font-mono text-sm overflow-x-auto">
+                    <code>sudo snap install --classic banglaflow{'\n'}ibus restart</code>
+                  </pre>
+                  <button 
+                    onClick={() => copyToClipboard('sudo snap install --classic banglaflow\nibus restart', 'snap-cmd')}
+                    className="absolute right-3 top-3 p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors"
+                    title="Copy snap installation & restart command"
+                  >
+                    {copiedCmd === 'snap-cmd' ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
+
+              <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 space-y-2 text-xs text-slate-300">
+                <div className="flex items-start gap-2">
+                  <span className="w-5 h-5 rounded-full bg-cyan-500/20 text-cyan-300 font-bold flex items-center justify-center flex-shrink-0 text-[11px]">1</span>
+                  <p>Installs the isolated, auto-updating <strong>banglaflow</strong> snap package with classic system integration.</p>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="w-5 h-5 rounded-full bg-cyan-500/20 text-cyan-300 font-bold flex items-center justify-center flex-shrink-0 text-[11px]">2</span>
+                  <p>Running <code className="text-emerald-400 font-mono bg-slate-800 px-1.5 py-0.5 rounded">ibus restart</code> immediately registers the new engine into your desktop session without a reboot.</p>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="w-5 h-5 rounded-full bg-cyan-500/20 text-cyan-300 font-bold flex items-center justify-center flex-shrink-0 text-[11px]">3</span>
+                  <p>Activate via <strong>Settings</strong> → <strong>Keyboard</strong> → <strong>Add (+)</strong> → <strong>Bengali (BanglaFlow)</strong>.</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Tab 3: DEB */}
           {installTab === "deb" && (
             <div className="glass-panel rounded-2xl p-6 sm:p-8 border border-white/10 shadow-xl space-y-6">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-white/5 gap-4">
                 <div>
                   <div className="flex items-center gap-2">
-                    <h3 className="text-lg font-bold text-white">Recommended for Ubuntu / Debian</h3>
+                    <h3 className="text-lg font-bold text-white">Standalone Debian Package (.deb)</h3>
                     <span className="px-2 py-0.5 text-[11px] font-semibold bg-emerald-500/20 text-emerald-400 rounded-full border border-emerald-500/30">
                       {releaseInfo.version}
                     </span>
                   </div>
-                  <p className="text-xs text-slate-400 mt-0.5">One-click installation for Ubuntu 24.04 / 26.04 LTS.</p>
+                  <p className="text-xs text-slate-400 mt-0.5">Direct offline installation for Ubuntu 24.04 / 26.04 LTS.</p>
                 </div>
                 <a 
                   href={releaseInfo.debUrl}
@@ -686,53 +804,7 @@ export default function App() {
             </div>
           )}
 
-          {/* Tab 2: SNAP */}
-          {installTab === "snap" && (
-            <div className="glass-panel rounded-2xl p-6 sm:p-8 border border-white/10 shadow-xl space-y-6">
-              <div>
-                <div className="flex items-center gap-2">
-                  <h3 className="text-lg font-bold text-white">Install from Canonical Snap Store</h3>
-                  <span className="px-2 py-0.5 text-[11px] font-semibold bg-cyan-500/20 text-cyan-400 rounded-full border border-cyan-500/30">
-                    Universal Snap
-                  </span>
-                </div>
-                <p className="text-xs text-slate-400 mt-0.5">Compatible across Ubuntu, Debian, Fedora, Arch, and all snap-enabled distributions.</p>
-              </div>
-
-              <div>
-                <span className="text-xs font-semibold text-slate-400 block mb-2">Terminal Command (Install & Restart IBus):</span>
-                <div className="relative">
-                  <pre className="p-4 rounded-xl bg-slate-900 border border-slate-800 text-cyan-400 font-mono text-sm overflow-x-auto">
-                    <code>sudo snap install --classic banglaflow{'\n'}ibus restart</code>
-                  </pre>
-                  <button 
-                    onClick={() => copyToClipboard('sudo snap install --classic banglaflow\nibus restart', 'snap-cmd')}
-                    className="absolute right-3 top-3 p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors"
-                    title="Copy snap installation & restart command"
-                  >
-                    {copiedCmd === 'snap-cmd' ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
-                  </button>
-                </div>
-              </div>
-
-              <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 space-y-2 text-xs text-slate-300">
-                <div className="flex items-start gap-2">
-                  <span className="w-5 h-5 rounded-full bg-cyan-500/20 text-cyan-300 font-bold flex items-center justify-center flex-shrink-0 text-[11px]">1</span>
-                  <p>Installs the isolated, auto-updating <strong>banglaflow</strong> snap package with classic system integration.</p>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span className="w-5 h-5 rounded-full bg-cyan-500/20 text-cyan-300 font-bold flex items-center justify-center flex-shrink-0 text-[11px]">2</span>
-                  <p>Running <code className="text-emerald-400 font-mono bg-slate-800 px-1.5 py-0.5 rounded">ibus restart</code> immediately registers the new engine into your desktop session without a reboot.</p>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span className="w-5 h-5 rounded-full bg-cyan-500/20 text-cyan-300 font-bold flex items-center justify-center flex-shrink-0 text-[11px]">3</span>
-                  <p>Activate via <strong>Settings</strong> → <strong>Keyboard</strong> → <strong>Add (+)</strong> → <strong>Bengali (BanglaFlow)</strong>.</p>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Tab 3: SOURCE */}
+          {/* Tab 4: SOURCE */}
           {installTab === "source" && (
             <div className="glass-panel rounded-2xl p-6 sm:p-8 border border-white/10 shadow-xl space-y-6">
               <div>

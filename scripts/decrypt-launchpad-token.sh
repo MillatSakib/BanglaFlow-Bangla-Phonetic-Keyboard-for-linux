@@ -8,3 +8,4 @@ echo "and ending with -----END PGP MESSAGE-----), then press Ctrl+D:"
 echo "----------------------------------------------------------------------------------"
 
 gpg --decrypt
+
