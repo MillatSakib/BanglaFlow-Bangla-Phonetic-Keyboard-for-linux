@@ -20,18 +20,17 @@ BASE_VER=$(echo "${VERSION}" | cut -d'-' -f1)
 
 echo "==> Package: ${PKG}, Version: ${VERSION}"
 
-# 2. Build orig.tar.gz if not present
-if [ ! -f "../${PKG}_${BASE_VER}.orig.tar.gz" ]; then
-    echo "==> Creating ../${PKG}_${BASE_VER}.orig.tar.gz..."
-    tar --exclude-vcs \
-        --exclude='./debian' \
-        --exclude='./website' \
-        --exclude='./.github' \
-        --exclude='*.deb' \
-        --exclude='*.snap' \
-        --exclude='__pycache__' \
-        -czf "../${PKG}_${BASE_VER}.orig.tar.gz" .
-fi
+# 2. Always recreate pristine orig.tar.gz to match current tree
+echo "==> Creating fresh ../${PKG}_${BASE_VER}.orig.tar.gz..."
+rm -f "../${PKG}_${BASE_VER}.orig.tar.gz"
+tar --exclude-vcs \
+    --exclude='./debian' \
+    --exclude='./website' \
+    --exclude='./.github' \
+    --exclude='*.deb' \
+    --exclude='*.snap' \
+    --exclude='__pycache__' \
+    -czf "../${PKG}_${BASE_VER}.orig.tar.gz" .
 
 # 3. Clean old debhelper artifacts
 dh clean || true
@@ -50,3 +49,4 @@ echo "================================================================="
 echo " Successfully uploaded BanglaFlow to Launchpad PPA!"
 echo " Check build status at: https://launchpad.net/~kovenceit/+archive/ubuntu/banglaflow"
 echo "================================================================="
+
