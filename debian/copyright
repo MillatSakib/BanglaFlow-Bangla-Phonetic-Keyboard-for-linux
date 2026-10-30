@@ -1,7 +1,7 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: banglaflow
 Upstream-Contact: Sakib <sakib@example.com>
-Source: https://github.com/sakib/banglaflow
+Source: https://github.com/MillatSakib/BanglaFlow-Bangla-Phonetic-Keyboard-for-linux
 
 Files: *
 Copyright: 2026 Sakib <sakib@example.com>

@@ -5,7 +5,9 @@ Maintainer: Sakib <sakib@example.com>
 Build-Depends: debhelper-compat (= 13)
 Standards-Version: 4.7.0
 Rules-Requires-Root: no
-Homepage: https://github.com/sakib/banglaflow
+Homepage: https://github.com/MillatSakib/BanglaFlow-Bangla-Phonetic-Keyboard-for-linux
+Vcs-Git: https://github.com/MillatSakib/BanglaFlow-Bangla-Phonetic-Keyboard-for-linux.git
+Vcs-Browser: https://github.com/MillatSakib/BanglaFlow-Bangla-Phonetic-Keyboard-for-linux
 
 Package: banglaflow
 Architecture: all

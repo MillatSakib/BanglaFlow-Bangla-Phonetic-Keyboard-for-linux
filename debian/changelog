@@ -1,4 +1,4 @@
-banglaflow (1.0.1-1) resolute; urgency=medium
+banglaflow (1.0.1-1) unstable; urgency=medium
 
   * Bugfix release: 1.0.1
   * Direct digit typing: top row numbers and keypad numbers unconditionally type digits without hijacking candidate selection.
