@@ -1,7 +1,7 @@
 Source: banglaflow
 Section: utils
 Priority: optional
-Maintainer: Sakib <sakib@example.com>
+Maintainer: Kovence <contact@kovence.com>
 Build-Depends: debhelper-compat (= 13)
 Standards-Version: 4.7.0
 Rules-Requires-Root: no
