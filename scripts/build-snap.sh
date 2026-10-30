@@ -31,7 +31,7 @@ chmod 755 "$BUILD_DIR/usr/libexec/ibus-engine-banglaflow"
 
 cp data/ibus/banglaflow.xml "$BUILD_DIR/usr/share/ibus/component/banglaflow.xml"
 cp -r data/rules/* "$BUILD_DIR/usr/share/banglaflow/rules/"
-cp -r data/dictionaries/* "$BUILD_DIR/usr/share/banglaflow/dictionaries/"
+cp data/dictionaries/words.tsv "$BUILD_DIR/usr/share/banglaflow/dictionaries/words.tsv"
 cp -r data/icons/* "$BUILD_DIR/usr/share/banglaflow/icons/"
 
 cp data/icons/banglaflow-512.png "$BUILD_DIR/meta/gui/icon.png"
